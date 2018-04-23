@@ -15,8 +15,8 @@ class GameScene: SKScene {
     var man = SKSpriteNode(imageNamed: "OnlyAlchemist_1")
     var table = SKSpriteNode(imageNamed: "Table")
     var scroll = SKSpriteNode(imageNamed: "Scroll")
-    var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
-    var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
+    //var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
+    //var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
     /*var discoveredItems : [Element] = [Element(sprite: SKSpriteNode(imageNamed: "Air"), name: "Air", index: 0, chosen: false),
                                        Element(sprite: SKSpriteNode(imageNamed: "Earth"), name: "Earth", index: 1, chosen: false),
                                        Element(sprite: SKSpriteNode(imageNamed: "Water"), name: "Water", index: 2, chosen: false),
@@ -109,7 +109,7 @@ class GameScene: SKScene {
         print("Size of scroll = \(scroll.size.width)")
         print("Size of screen = \(UIScreen.main.bounds.width)")
         }
-        
+        /*
         itemImage1.size.height = self.frame.size.height / 8
         itemImage1.size.width = itemImage1.size.height
         itemImage1.position = CGPoint(x: 0 - 200, y: 200)
@@ -125,7 +125,7 @@ class GameScene: SKScene {
         //itemImage1.yScale = 0.5
         // itemImage1.xScale = 0.5
         addChild(itemImage2)
-        
+        */
         /*
         for item in allVisibleItems {
             let index = CGFloat(allVisibleItems.index(of: item)! + 1)
@@ -224,8 +224,9 @@ class GameScene: SKScene {
         if movingElement != nil {
             if withinDistance(itemPos: movingItem.position, handPos: CGPoint(x: 0 - 200, y: 200), distance: 150) { //snaps to left hand
                 print("Ended touches at left hand")
+                playSound("Snap.mp3")
+                playSnapAnimation(pos: CGPoint(x: 0 - 200, y: 200), zPos: 1)
                 
-                playSound("snap")
                 //Show animation
                 movingItem.position = CGPoint(x: 0 - 200, y: 200)
                 movingItem.zPosition = 1
@@ -248,8 +249,9 @@ class GameScene: SKScene {
                 
             } else if withinDistance(itemPos: movingItem.position, handPos: CGPoint(x: 240, y: 150), distance: 150) { //snaps to right hand
                 print("Ended touches at right hand")
+                playSound("Snap.mp3")
+                playSnapAnimation(pos: CGPoint(x: 240, y: 150), zPos: 3)
                 
-                playSound("snap")
                 //Show animation
                 movingItem.position = CGPoint(x: 240, y: 150)
                 movingItem.zPosition = 4
@@ -277,8 +279,24 @@ class GameScene: SKScene {
         // check if both hands are full????
     }
     
+    func playSnapAnimation(pos: CGPoint, zPos: CGFloat) {
+        if let snapAnimation = SKEmitterNode(fileNamed: "SnapAnimation") {
+            addChild(snapAnimation)
+            snapAnimation.position = pos //PARAMETER
+            snapAnimation.advanceSimulationTime(10)
+            snapAnimation.zPosition = zPos //PARAMETER
+            snapAnimation.particleLifetime = 3
+            snapAnimation.particleBirthRate = 0
+            
+            let waitAction = SKAction.wait(forDuration: TimeInterval(snapAnimation.particleLifetime))
+            snapAnimation.run(waitAction, completion: {
+                snapAnimation.removeFromParent()
+            })
+        }
+    }
+    
     func playSound(_ sound: String) {
-        
+        run(SKAction.playSoundFileNamed(sound, waitForCompletion: false))
     }
     
     /*

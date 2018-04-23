@@ -16,6 +16,9 @@
 		7F72CB622087678C000C20B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F72CB612087678C000C20B8 /* Assets.xcassets */; };
 		7F72CB652087678C000C20B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F72CB632087678C000C20B8 /* LaunchScreen.storyboard */; };
 		7F72CB6D208CFFC7000C20B8 /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72CB6C208CFFC7000C20B8 /* Element.swift */; };
+		7F72CB6F208E341E000C20B8 /* SnapAnimation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7F72CB6E208E341E000C20B8 /* SnapAnimation.sks */; };
+		7F72CB73208E5C9D000C20B8 /* Snap.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F72CB72208E5C9D000C20B8 /* Snap.mp3 */; };
+		7F72CB75208E690C000C20B8 /* NewDiscovery.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F72CB74208E690C000C20B8 /* NewDiscovery.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +33,9 @@
 		7F72CB642087678C000C20B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7F72CB662087678C000C20B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F72CB6C208CFFC7000C20B8 /* Element.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Element.swift; sourceTree = "<group>"; };
+		7F72CB6E208E341E000C20B8 /* SnapAnimation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SnapAnimation.sks; sourceTree = "<group>"; };
+		7F72CB72208E5C9D000C20B8 /* Snap.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Snap.mp3; sourceTree = "<group>"; };
+		7F72CB74208E690C000C20B8 /* NewDiscovery.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = NewDiscovery.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +54,8 @@
 			children = (
 				7F72CB532087678B000C20B8 /* HardrockAlchemistGame */,
 				7F72CB522087678B000C20B8 /* Products */,
+				7F72CB72208E5C9D000C20B8 /* Snap.mp3 */,
+				7F72CB74208E690C000C20B8 /* NewDiscovery.mp3 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -72,6 +80,7 @@
 				7F72CB632087678C000C20B8 /* LaunchScreen.storyboard */,
 				7F72CB662087678C000C20B8 /* Info.plist */,
 				7F72CB6C208CFFC7000C20B8 /* Element.swift */,
+				7F72CB6E208E341E000C20B8 /* SnapAnimation.sks */,
 			);
 			path = HardrockAlchemistGame;
 			sourceTree = "<group>";
@@ -134,10 +143,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F72CB75208E690C000C20B8 /* NewDiscovery.mp3 in Resources */,
+				7F72CB6F208E341E000C20B8 /* SnapAnimation.sks in Resources */,
 				7F72CB602087678B000C20B8 /* Main.storyboard in Resources */,
 				7F72CB572087678B000C20B8 /* GameScene.sks in Resources */,
 				7F72CB622087678C000C20B8 /* Assets.xcassets in Resources */,
 				7F72CB652087678C000C20B8 /* LaunchScreen.storyboard in Resources */,
+				7F72CB73208E5C9D000C20B8 /* Snap.mp3 in Resources */,
 				7F72CB592087678B000C20B8 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
