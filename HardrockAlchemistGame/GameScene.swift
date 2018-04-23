@@ -25,12 +25,15 @@ class GameScene: SKScene {
     var discoveredItems = ["Earth", "Air", "Fire", "Water"]
     var allVisibleItems : [Element] = []
    /* var allVisibleItems = [SKSpriteNode(imageNamed: "Earth"), SKSpriteNode(imageNamed: "Water"), SKSpriteNode(imageNamed: "Fire"), SKSpriteNode(imageNamed: "Air"), SKSpriteNode(imageNamed: "Wind")] */
-    var movingItem = SKSpriteNode()
-    var element1 : Element?
-    var element2 : Element?
+    var movingItem : SKSpriteNode!
+    var movingElement : Element!
     var itemSize : CGFloat!
-    var leftElement : SKNode?
-    var rightElement : SKNode?
+    //var leftElement : SKNode?
+    var leftElement = ""
+    var leftElementSprite : SKSpriteNode!
+    //var rightElement : SKNode?
+    var rightElement = ""
+    var rightElementSprite : SKSpriteNode!
 
     
     override func didMove(to view: SKView) {
@@ -164,8 +167,15 @@ class GameScene: SKScene {
             for item in allVisibleItems {
                 if withinDistance(itemPos: item.loc, handPos: location, distance: 60) {
               //  if item.contains(location) { //make contains a property on Element to use discoveredItems instead of allVisible...
-                    //Create a new item with exaxt same properties!!! call it movingItem below
-                  //  movingItem.texture = SKTexture(imageNamed: "Earth")
+                  /*
+                    movingSprite = SKSpriteNode(imageNamed: item.name)
+                    movingSprite.size.height = itemSize
+                    movingSprite.size.width = itemSize
+                    movingSprite.position = location
+                    movingSprite.zPosition = 5
+                    movingItem = Element(sprite: movingSprite, name: item.name, index: item.index, chosen: true, loc: location)
+                    addChild(movingSprite) */
+                    
                     movingItem = SKSpriteNode(imageNamed: item.name)
                     movingItem.size.height = itemSize
                     movingItem.size.width = itemSize
@@ -173,15 +183,23 @@ class GameScene: SKScene {
                     movingItem.position = location
                     movingItem.zPosition = 5
                     self.addChild(movingItem)
+                    movingElement = Element(sprite: movingItem, name: item.name, index: item.index, chosen: true, loc: location)
+                    print("Adding \(movingElement.name) as moving element")
                 }
             }
             
             if withinDistance(itemPos: location, handPos: CGPoint(x: 0 - 200, y: 200), distance: 60) { //Delete element1
                 print("Clicked element1")
-                leftElement?.removeFromParent()
+               // leftElement?.removeFromParent()
+                leftElementSprite?.removeFromParent()
+                leftElement = ""
+                movingElement = nil //??
             } else if withinDistance(itemPos: location, handPos: CGPoint(x: 240, y: 150), distance: 60) { //Delete element1
                 print("Clicked element2")
-                rightElement?.removeFromParent()
+               // rightElement?.removeFromParent()
+                rightElementSprite?.removeFromParent()
+                rightElement = ""
+                movingElement = nil //??
             }
         }
     }
@@ -193,8 +211,8 @@ class GameScene: SKScene {
            // for item in allVisibleItems {
                 if movingItem.contains(location) {
                     movingItem.position = location
-                    
                 }
+            
            // }
         }
        
@@ -203,32 +221,92 @@ class GameScene: SKScene {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 
-        for item in allVisibleItems {
+        if movingElement != nil {
             if withinDistance(itemPos: movingItem.position, handPos: CGPoint(x: 0 - 200, y: 200), distance: 150) { //snaps to left hand
+                print("Ended touches at left hand")
+                
+                playSound("snap")
+                //Show animation
                 movingItem.position = CGPoint(x: 0 - 200, y: 200)
                 movingItem.zPosition = 1
-                leftElement = movingItem
-               // movingItem.removeFromParent()
-                //Delete item that's already there?
+                
+              //  replaceItem(hand: "left", sprite: leftElementSprite)
+                leftElementSprite?.removeFromParent()
+                leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
+                leftElementSprite.position = CGPoint(x: 0 - 200, y: 200)
+                leftElementSprite.zPosition = 1
+                leftElementSprite.size.height = itemSize
+                leftElementSprite.size.width = itemSize
+                self.addChild(leftElementSprite)
+                leftElement = movingElement.name
+                movingItem.removeFromParent()
+                movingElement.sprite?.removeFromParent()
+                movingElement = nil
+                
+                print("Left element is \(leftElementSprite.texture)")
+                print("Left element name is \(leftElement)")
+                
             } else if withinDistance(itemPos: movingItem.position, handPos: CGPoint(x: 240, y: 150), distance: 150) { //snaps to right hand
+                print("Ended touches at right hand")
+                
+                playSound("snap")
+                //Show animation
                 movingItem.position = CGPoint(x: 240, y: 150)
                 movingItem.zPosition = 4
-                rightElement = movingItem
-               // movingItem.removeFromParent()
-                //Delete item that's already there?
+           
+                rightElementSprite?.removeFromParent()
+                rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
+                rightElementSprite.position = CGPoint(x: 240, y: 150)
+                rightElementSprite.zPosition = 4
+                rightElementSprite.size.height = itemSize
+                rightElementSprite.size.width = itemSize
+                self.addChild(rightElementSprite)
+                rightElement = movingElement.name
+                movingItem.removeFromParent()
+                movingElement.sprite?.removeFromParent()
+                movingElement = nil
+                
+                print("Right element is \(rightElementSprite.texture)")
+                print("Right element name is \(rightElement)")
+                
             } else {
-                //Put them back to right position or delete?
+                movingItem.removeFromParent() //Deleting
+                movingElement = nil
             }
         }
         // check if both hands are full????
+    }
+    
+    func playSound(_ sound: String) {
         
     }
+    
+    /*
+    func replaceItem(hand : String, sprite: SKSpriteNode) {
+        if hand == "left" {
+            leftElementSprite?.removeFromParent()
+            leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
+            leftElement = movingElement.name
+        } else if hand == "right" {
+            rightElementSprite?.removeFromParent()
+            rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
+            rightElement = movingElement.name
+        }
+        sprite.position = CGPoint(x: 0 - 200, y: 200)
+        sprite.zPosition = 1
+        sprite.size.height = itemSize
+        sprite.size.width = itemSize
+        self.addChild(sprite)
+        movingItem.removeFromParent()
+        movingElement.sprite?.removeFromParent()
+        movingElement = nil
+    } */
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
 
     }
     
-    func withinDistance(itemPos: CGPoint, handPos: CGPoint, distance: Float) -> Bool {
+    func withinDistance(itemPos: CGPoint, handPos: CGPoint, distance: Float) -> Bool { //Change name to pos1 and pos2
         let dx = itemPos.x - handPos.x
         let dy = itemPos.y - handPos.y
         let hypotenusa = Float(sqrt(dx * dx + dy * dy))
