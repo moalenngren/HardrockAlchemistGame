@@ -19,6 +19,13 @@
 		7F72CB6F208E341E000C20B8 /* SnapAnimation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7F72CB6E208E341E000C20B8 /* SnapAnimation.sks */; };
 		7F72CB73208E5C9D000C20B8 /* Snap.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F72CB72208E5C9D000C20B8 /* Snap.mp3 */; };
 		7F72CB75208E690C000C20B8 /* NewDiscovery.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F72CB74208E690C000C20B8 /* NewDiscovery.mp3 */; };
+		7FBEF5FF208E6B9900068C06 /* Pop.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 7FBEF5FE208E6B9800068C06 /* Pop.aiff */; };
+		7FBEF601208E735C00068C06 /* Snap2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7FBEF600208E735C00068C06 /* Snap2.wav */; };
+		7FBEF603208E769500068C06 /* ElementList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBEF602208E769500068C06 /* ElementList.swift */; };
+		7FBEF605208E7C5A00068C06 /* DiscoveryParticles.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7FBEF604208E7C5A00068C06 /* DiscoveryParticles.sks */; };
+		7FBEF607208E7E7600068C06 /* DiscoveryFire.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7FBEF606208E7E7600068C06 /* DiscoveryFire.sks */; };
+		7FBEF609208F23AE00068C06 /* Sketch Gothic School.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FBEF608208F23AE00068C06 /* Sketch Gothic School.ttf */; };
+		7FBEF60F208F2DA700068C06 /* PERRYGOT.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 7FBEF60E208F2DA700068C06 /* PERRYGOT.TTF */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +43,13 @@
 		7F72CB6E208E341E000C20B8 /* SnapAnimation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SnapAnimation.sks; sourceTree = "<group>"; };
 		7F72CB72208E5C9D000C20B8 /* Snap.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Snap.mp3; sourceTree = "<group>"; };
 		7F72CB74208E690C000C20B8 /* NewDiscovery.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = NewDiscovery.mp3; sourceTree = "<group>"; };
+		7FBEF5FE208E6B9800068C06 /* Pop.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Pop.aiff; sourceTree = "<group>"; };
+		7FBEF600208E735C00068C06 /* Snap2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Snap2.wav; sourceTree = "<group>"; };
+		7FBEF602208E769500068C06 /* ElementList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementList.swift; sourceTree = "<group>"; };
+		7FBEF604208E7C5A00068C06 /* DiscoveryParticles.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = DiscoveryParticles.sks; sourceTree = "<group>"; };
+		7FBEF606208E7E7600068C06 /* DiscoveryFire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = DiscoveryFire.sks; sourceTree = "<group>"; };
+		7FBEF608208F23AE00068C06 /* Sketch Gothic School.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sketch Gothic School.ttf"; sourceTree = "<group>"; };
+		7FBEF60E208F2DA700068C06 /* PERRYGOT.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = PERRYGOT.TTF; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +68,6 @@
 			children = (
 				7F72CB532087678B000C20B8 /* HardrockAlchemistGame */,
 				7F72CB522087678B000C20B8 /* Products */,
-				7F72CB72208E5C9D000C20B8 /* Snap.mp3 */,
-				7F72CB74208E690C000C20B8 /* NewDiscovery.mp3 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,6 +82,8 @@
 		7F72CB532087678B000C20B8 /* HardrockAlchemistGame */ = {
 			isa = PBXGroup;
 			children = (
+				7FBEF60D208F23E000068C06 /* Sounds */,
+				7FBEF60C208F23CD00068C06 /* Fonts */,
 				7F72CB542087678B000C20B8 /* AppDelegate.swift */,
 				7F72CB562087678B000C20B8 /* GameScene.sks */,
 				7F72CB582087678B000C20B8 /* Actions.sks */,
@@ -81,8 +95,31 @@
 				7F72CB662087678C000C20B8 /* Info.plist */,
 				7F72CB6C208CFFC7000C20B8 /* Element.swift */,
 				7F72CB6E208E341E000C20B8 /* SnapAnimation.sks */,
+				7FBEF602208E769500068C06 /* ElementList.swift */,
+				7FBEF604208E7C5A00068C06 /* DiscoveryParticles.sks */,
+				7FBEF606208E7E7600068C06 /* DiscoveryFire.sks */,
 			);
 			path = HardrockAlchemistGame;
+			sourceTree = "<group>";
+		};
+		7FBEF60C208F23CD00068C06 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				7FBEF60E208F2DA700068C06 /* PERRYGOT.TTF */,
+				7FBEF608208F23AE00068C06 /* Sketch Gothic School.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		7FBEF60D208F23E000068C06 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				7F72CB72208E5C9D000C20B8 /* Snap.mp3 */,
+				7F72CB74208E690C000C20B8 /* NewDiscovery.mp3 */,
+				7FBEF5FE208E6B9800068C06 /* Pop.aiff */,
+				7FBEF600208E735C00068C06 /* Snap2.wav */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -145,10 +182,16 @@
 			files = (
 				7F72CB75208E690C000C20B8 /* NewDiscovery.mp3 in Resources */,
 				7F72CB6F208E341E000C20B8 /* SnapAnimation.sks in Resources */,
+				7FBEF607208E7E7600068C06 /* DiscoveryFire.sks in Resources */,
 				7F72CB602087678B000C20B8 /* Main.storyboard in Resources */,
+				7FBEF60F208F2DA700068C06 /* PERRYGOT.TTF in Resources */,
 				7F72CB572087678B000C20B8 /* GameScene.sks in Resources */,
 				7F72CB622087678C000C20B8 /* Assets.xcassets in Resources */,
+				7FBEF605208E7C5A00068C06 /* DiscoveryParticles.sks in Resources */,
 				7F72CB652087678C000C20B8 /* LaunchScreen.storyboard in Resources */,
+				7FBEF5FF208E6B9900068C06 /* Pop.aiff in Resources */,
+				7FBEF609208F23AE00068C06 /* Sketch Gothic School.ttf in Resources */,
+				7FBEF601208E735C00068C06 /* Snap2.wav in Resources */,
 				7F72CB73208E5C9D000C20B8 /* Snap.mp3 in Resources */,
 				7F72CB592087678B000C20B8 /* Actions.sks in Resources */,
 			);
@@ -161,6 +204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FBEF603208E769500068C06 /* ElementList.swift in Sources */,
 				7F72CB5B2087678B000C20B8 /* GameScene.swift in Sources */,
 				7F72CB5D2087678B000C20B8 /* GameViewController.swift in Sources */,
 				7F72CB6D208CFFC7000C20B8 /* Element.swift in Sources */,

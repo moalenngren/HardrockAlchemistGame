@@ -8,33 +8,34 @@
 
 import SpriteKit
 import GameplayKit
+import AudioToolbox
 
 class GameScene: SKScene {
-
+    
     var alchemistCircle = SKSpriteNode(imageNamed: "Circle")
     var man = SKSpriteNode(imageNamed: "OnlyAlchemist_1")
     var table = SKSpriteNode(imageNamed: "Table")
     var scroll = SKSpriteNode(imageNamed: "Scroll")
-    //var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
-    //var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
-    /*var discoveredItems : [Element] = [Element(sprite: SKSpriteNode(imageNamed: "Air"), name: "Air", index: 0, chosen: false),
-                                       Element(sprite: SKSpriteNode(imageNamed: "Earth"), name: "Earth", index: 1, chosen: false),
-                                       Element(sprite: SKSpriteNode(imageNamed: "Water"), name: "Water", index: 2, chosen: false),
-                                        Element(sprite: SKSpriteNode(imageNamed: "Fire"), name: "Fire", index: 3, chosen: false)] */
-    
+    var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
+    var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
+    let popUp = SKSpriteNode(imageNamed: "PopUpWindow")
+    var popUpItem : SKSpriteNode!
+    var popUpIsShowing = false
+    var animationIsShowing = false
     var discoveredItems = ["Earth", "Air", "Fire", "Water"]
     var allVisibleItems : [Element] = []
-   /* var allVisibleItems = [SKSpriteNode(imageNamed: "Earth"), SKSpriteNode(imageNamed: "Water"), SKSpriteNode(imageNamed: "Fire"), SKSpriteNode(imageNamed: "Air"), SKSpriteNode(imageNamed: "Wind")] */
     var movingItem : SKSpriteNode!
     var movingElement : Element!
     var itemSize : CGFloat!
-    //var leftElement : SKNode?
     var leftElement = ""
     var leftElementSprite : SKSpriteNode!
-    //var rightElement : SKNode?
     var rightElement = ""
     var rightElementSprite : SKSpriteNode!
-
+    var popUpText = SKLabelNode(fontNamed: "PERRYGOT")
+    
+    enum Cases {
+        case InventThis, AlreadyInvented, Nope
+    }
     
     override func didMove(to view: SKView) {
         
@@ -54,7 +55,7 @@ class GameScene: SKScene {
             table.zPosition = 1
             table.size = self.frame.size
             table.yScale = 0.75
-           // table.xScale = 0.7
+            // table.xScale = 0.7
             addChild(table)
             
             man.position = CGPoint(x: 0, y: 0)
@@ -71,76 +72,73 @@ class GameScene: SKScene {
             scroll.position = CGPoint(x: 0, y: (-self.frame.size.height / 2) + (scroll.size.height )-20)
             scroll.zPosition = 3
             addChild(scroll)
-            
-            
         } else {
- 
-      
-        alchemistCircle.position = CGPoint(x: 0, y: 0 - 50)
-        alchemistCircle.zPosition = 0
-        alchemistCircle.size = self.frame.size
-        alchemistCircle.yScale = 0.9
-        alchemistCircle.xScale = 0.9
-        addChild(alchemistCircle)
-        
-        table.position = CGPoint(x: 0, y: 0 - 50)
-        table.zPosition = 1
-        table.size = self.frame.size
-       // table.yScale = 0
-        // table.xScale = 0.7
-        addChild(table)
-        
-        man.position = CGPoint(x: 0, y: 0 - 58)
-        man.zPosition = 2
-        man.size = self.frame.size
-        man.yScale = 0.9
-        man.xScale = 0.9
-        addChild(man)
-        
-        scroll.size.height = self.frame.size.height / 2.5
-        scroll.size.width = self.frame.size.width
-        scroll.yScale = 0.9
-        scroll.xScale = 0.9
-        scroll.position = CGPoint(x: 0, y: (-self.frame.size.height / 2) + (scroll.size.height / 2))
-        scroll.zPosition = 3
-        addChild(scroll)
-        
-        print("Size of frame = \(self.frame.size.width)")
-        print("Size of scroll = \(scroll.size.width)")
-        print("Size of screen = \(UIScreen.main.bounds.width)")
+            alchemistCircle.position = CGPoint(x: 0, y: 0 - 50)
+            alchemistCircle.zPosition = 0
+            alchemistCircle.size = self.frame.size
+            alchemistCircle.yScale = 0.9
+            alchemistCircle.xScale = 0.9
+            addChild(alchemistCircle)
+            
+            table.position = CGPoint(x: 0, y: 0 - 50)
+            table.zPosition = 1
+            table.size = self.frame.size
+            // table.yScale = 0
+            // table.xScale = 0.7
+            addChild(table)
+            
+            man.position = CGPoint(x: 0, y: 0 - 58)
+            man.zPosition = 2
+            man.size = self.frame.size
+            man.yScale = 0.9
+            man.xScale = 0.9
+            addChild(man)
+            
+            scroll.size.height = self.frame.size.height / 2.5
+            scroll.size.width = self.frame.size.width
+            scroll.yScale = 0.9
+            scroll.xScale = 0.9
+            scroll.position = CGPoint(x: 0, y: (-self.frame.size.height / 2) + (scroll.size.height / 2))
+            scroll.zPosition = 3
+            addChild(scroll)
+            
+            print("Size of frame = \(self.frame.size.width)")
+            print("Size of scroll = \(scroll.size.width)")
+            print("Size of screen = \(UIScreen.main.bounds.width)")
         }
-        /*
+        
         itemImage1.size.height = self.frame.size.height / 8
         itemImage1.size.width = itemImage1.size.height
         itemImage1.position = CGPoint(x: 0 - 200, y: 200)
         itemImage1.zPosition = 1
-        //itemImage1.yScale = 0.5
-       // itemImage1.xScale = 0.5
         addChild(itemImage1)
         
         itemImage2.size.height = self.frame.size.height / 8
         itemImage2.size.width = itemImage1.size.height
         itemImage2.position = CGPoint(x: 240, y: 150)
         itemImage2.zPosition = 3
-        //itemImage1.yScale = 0.5
-        // itemImage1.xScale = 0.5
         addChild(itemImage2)
-        */
-        /*
-        for item in allVisibleItems {
-            let index = CGFloat(allVisibleItems.index(of: item)! + 1)
-            let size = scroll.size.width / 6
-            item.size.width = size
-            item.size.height = size
-            let pos = size * index + 20
-            let xPos = 0 - (scroll.size.width / 2) + pos
-            item.position = CGPoint(x: xPos , y: scroll.position.y + 40 )
-            item.zPosition = 4
-            addChild(item)
-        } */
         
         itemSize = CGFloat(scroll.size.width / 6)
         
+        reloadInventory()
+        /*
+         for item in discoveredItems {
+         let elementSprite = SKSpriteNode(imageNamed: item)
+         let size = scroll.size.width / 6
+         elementSprite.size.width = size
+         elementSprite.size.height = size
+         let pos = size * CGFloat(Int(discoveredItems.index(of: item)!) + 1) + 20
+         let xPos = 0 - (scroll.size.width / 2) + pos
+         elementSprite.position = CGPoint(x: xPos , y: scroll.position.y + 40 )
+         let element = Element(sprite: elementSprite, name: item, index: Int(discoveredItems.index(of: item)!), chosen: false, loc: elementSprite.position)
+         elementSprite.zPosition = 4
+         addChild(elementSprite)
+         allVisibleItems.append(element)
+         } */
+    }
+    
+    func reloadInventory() {
         for item in discoveredItems {
             let elementSprite = SKSpriteNode(imageNamed: item)
             let size = scroll.size.width / 6
@@ -154,52 +152,51 @@ class GameScene: SKScene {
             addChild(elementSprite)
             allVisibleItems.append(element)
         }
-        
-        
     }
     
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-       //Try to separate long press and short press!!!! Short = present info square
+        //Try to separate long press and short press!!!! Short = present info square
         for touch in touches {
             let location = touch.location(in: self)
             //Check several fingers????!!?
-            for item in allVisibleItems {
-                if withinDistance(itemPos: item.loc, handPos: location, distance: 60) {
-              //  if item.contains(location) { //make contains a property on Element to use discoveredItems instead of allVisible...
-                  /*
-                    movingSprite = SKSpriteNode(imageNamed: item.name)
-                    movingSprite.size.height = itemSize
-                    movingSprite.size.width = itemSize
-                    movingSprite.position = location
-                    movingSprite.zPosition = 5
-                    movingItem = Element(sprite: movingSprite, name: item.name, index: item.index, chosen: true, loc: location)
-                    addChild(movingSprite) */
-                    
-                    movingItem = SKSpriteNode(imageNamed: item.name)
-                    movingItem.size.height = itemSize
-                    movingItem.size.width = itemSize
-                    print("Clicking image: \(String(describing: item.name))!)")
-                    movingItem.position = location
-                    movingItem.zPosition = 5
-                    self.addChild(movingItem)
-                    movingElement = Element(sprite: movingItem, name: item.name, index: item.index, chosen: true, loc: location)
-                    print("Adding \(movingElement.name) as moving element")
-                }
-            }
             
-            if withinDistance(itemPos: location, handPos: CGPoint(x: 0 - 200, y: 200), distance: 60) { //Delete element1
-                print("Clicked element1")
-               // leftElement?.removeFromParent()
-                leftElementSprite?.removeFromParent()
-                leftElement = ""
-                movingElement = nil //??
-            } else if withinDistance(itemPos: location, handPos: CGPoint(x: 240, y: 150), distance: 60) { //Delete element1
-                print("Clicked element2")
-               // rightElement?.removeFromParent()
-                rightElementSprite?.removeFromParent()
-                rightElement = ""
-                movingElement = nil //??
+            if popUpIsShowing {
+                popUpItem.removeFromParent()
+                popUp.removeFromParent()
+                popUpIsShowing = false
+                popUpText.removeFromParent()
+                
+                reloadInventory()
+                print("reloads inventory")
+                
+            } else if !animationIsShowing {
+                for item in allVisibleItems {
+                    if withinDistance(itemPos: item.loc, handPos: location, distance: 60) {
+                        movingItem = SKSpriteNode(imageNamed: item.name)
+                        movingItem.size.height = itemSize
+                        movingItem.size.width = itemSize
+                        print("Clicking image: \(String(describing: item.name))!)")
+                        movingItem.position = location
+                        movingItem.zPosition = 5
+                        self.addChild(movingItem)
+                        movingElement = Element(sprite: movingItem, name: item.name, index: item.index, chosen: true, loc: location)
+                        print("Adding \(movingElement.name) as moving element")
+                    }
+                }
+                
+                if withinDistance(itemPos: location, handPos: CGPoint(x: 0 - 200, y: 200), distance: 60) { //Delete element1
+                    print("Clicked element1")
+                    playSound("Snap2.wav") //Change to Pop
+                    leftElementSprite?.removeFromParent()
+                    leftElement = ""
+                    movingElement = nil //??
+                } else if withinDistance(itemPos: location, handPos: CGPoint(x: 240, y: 150), distance: 60) { //Delete element2
+                    playSound("Snap2.wav") //Change to Pop
+                    print("Clicked element2")
+                    rightElementSprite?.removeFromParent()
+                    rightElement = ""
+                    movingElement = nil //??
+                }
             }
         }
     }
@@ -208,19 +205,16 @@ class GameScene: SKScene {
         for touch in touches {
             let location = touch.location(in: self)
             
-           // for item in allVisibleItems {
-                if movingItem.contains(location) {
-                    movingItem.position = location
-                }
-            
-           // }
+            // for item in allVisibleItems {
+            if movingItem.contains(location) {
+                movingItem.position = location
+            }
+            // }
         }
-       
-        
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
         if movingElement != nil {
             if withinDistance(itemPos: movingItem.position, handPos: CGPoint(x: 0 - 200, y: 200), distance: 150) { //snaps to left hand
                 print("Ended touches at left hand")
@@ -231,7 +225,7 @@ class GameScene: SKScene {
                 movingItem.position = CGPoint(x: 0 - 200, y: 200)
                 movingItem.zPosition = 1
                 
-              //  replaceItem(hand: "left", sprite: leftElementSprite)
+                //  replaceItem(hand: "left", sprite: leftElementSprite)
                 leftElementSprite?.removeFromParent()
                 leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
                 leftElementSprite.position = CGPoint(x: 0 - 200, y: 200)
@@ -244,18 +238,16 @@ class GameScene: SKScene {
                 movingElement.sprite?.removeFromParent()
                 movingElement = nil
                 
-                print("Left element is \(leftElementSprite.texture)")
+                print("Left element is \(String(describing: leftElementSprite.texture))")
                 print("Left element name is \(leftElement)")
                 
             } else if withinDistance(itemPos: movingItem.position, handPos: CGPoint(x: 240, y: 150), distance: 150) { //snaps to right hand
                 print("Ended touches at right hand")
                 playSound("Snap.mp3")
                 playSnapAnimation(pos: CGPoint(x: 240, y: 150), zPos: 3)
-                
-                //Show animation
                 movingItem.position = CGPoint(x: 240, y: 150)
                 movingItem.zPosition = 4
-           
+                
                 rightElementSprite?.removeFromParent()
                 rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
                 rightElementSprite.position = CGPoint(x: 240, y: 150)
@@ -268,23 +260,127 @@ class GameScene: SKScene {
                 movingElement.sprite?.removeFromParent()
                 movingElement = nil
                 
-                print("Right element is \(rightElementSprite.texture)")
+                print("Right element is \(String(describing: rightElementSprite.texture))")
                 print("Right element name is \(rightElement)")
                 
             } else {
-                movingItem.removeFromParent() //Deleting
+                //Deleting the moving object
+                movingItem.removeFromParent()
                 movingElement = nil
             }
         }
-        // check if both hands are full????
+        // Checks if both hands are full
+        if leftElement != "" && rightElement != "" {
+            checkForNewElement(leftElement, rightElement)
+        }
+    }
+    
+    func checkForNewElement(_ left : String, _ right : String) {
+        print("Checking if to make new item or not")
+        var makeNewItem = Cases.Nope
+        var index = 0
+        var thisDiscovery = ""
+        for x in allItems {
+            if left == x["element1"] && right == x["element2"] || left == x["element2"] && right == x["element1"] {
+                thisDiscovery = x["discovery"]! //Plockar fram vilket item som ska skapas
+                makeNewItem = Cases.InventThis //Säger åt programmet att göra ett nytt item
+                if discoveredItems.contains(thisDiscovery) {
+                    makeNewItem = Cases.AlreadyInvented //Säger åt programmet att detta redan är uppfunnet
+                }
+            }
+        }
+        if makeNewItem == .InventThis {
+            playDiscoveryAnimation()
+            playSound("NewDiscovery.mp3")
+            discoveredItems.append(thisDiscovery)
+            
+            let waitAction = SKAction.wait(forDuration: TimeInterval(2))
+            run(waitAction, completion: {
+                
+                self.popUp.position = CGPoint(x: 0, y: 0)
+                self.popUp.yScale = 0.8
+                self.popUp.xScale = 0.8
+                self.popUp.zPosition = 7
+                self.popUpIsShowing = true
+                self.addChild(self.popUp)
+                self.popUpItem = SKSpriteNode(imageNamed: thisDiscovery)
+                self.popUpItem.position = CGPoint(x: 0, y: 0)
+                self.popUpItem.yScale = 0.3
+                self.popUpItem.xScale = 0.3
+                self.popUpItem.zPosition = 8
+                self.addChild(self.popUpItem)
+                self.popUpText.text = "\(thisDiscovery.uppercased())"
+                self.popUpText.fontColor = SKColor.black
+                self.popUpText.fontSize = 70
+                self.popUpText.horizontalAlignmentMode = .center
+                self.popUpText.position = CGPoint(x: 0, y: self.popUp.size.height / 2 - 250)
+                self.popUpText.zPosition = 8
+                self.addChild(self.popUpText)
+                //Set labels and pics here!
+                
+                
+            })
+            
+            print("Congrats! You invented \(thisDiscovery.lowercased())")
+            print("adding \(thisDiscovery) to inventory")
+            index = index + 1
+            
+            
+        } else if makeNewItem == .AlreadyInvented {
+            print("You've already invented \(thisDiscovery) before")
+            playSound("Error")
+            //Shaking animation
+        } else if makeNewItem == .Nope {
+            print("Nope, these two elements aren't doing anything")
+            //Shaking animation
+            playSound("Error")
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        }
+        leftElementSprite?.removeFromParent()
+        leftElement = ""
+        movingElement = nil //??
+        rightElementSprite?.removeFromParent()
+        rightElement = ""
+    }
+    
+    func playDiscoveryAnimation() {
+        animationIsShowing = true
+        if let discovery = SKEmitterNode(fileNamed: "DiscoveryParticles") {
+            addChild(discovery)
+            discovery.position = CGPoint(x: -20, y: -40)
+            discovery.advanceSimulationTime(10)
+            discovery.zPosition = 5
+            discovery.particleLifetime = 3
+            // discovery.particleBirthRate = 0
+            
+            let waitAction = SKAction.wait(forDuration: TimeInterval(discovery.particleLifetime))
+            discovery.run(waitAction, completion: {
+                discovery.removeFromParent()
+            })
+        }
+        
+        if let fire = SKEmitterNode(fileNamed: "DiscoveryFire") {
+            addChild(fire)
+            fire.position = CGPoint(x: -20, y: -40)
+            fire.advanceSimulationTime(10)
+            fire.zPosition = 6
+            fire.particleLifetime = 3
+            // discovery.particleBirthRate = 0
+            
+            let waitAction = SKAction.wait(forDuration: TimeInterval(fire.particleLifetime))
+            fire.run(waitAction, completion: {
+                fire.removeFromParent()
+                self.animationIsShowing = false
+            })
+        }
     }
     
     func playSnapAnimation(pos: CGPoint, zPos: CGFloat) {
         if let snapAnimation = SKEmitterNode(fileNamed: "SnapAnimation") {
             addChild(snapAnimation)
-            snapAnimation.position = pos //PARAMETER
+            snapAnimation.position = pos
             snapAnimation.advanceSimulationTime(10)
-            snapAnimation.zPosition = zPos //PARAMETER
+            snapAnimation.zPosition = zPos
             snapAnimation.particleLifetime = 3
             snapAnimation.particleBirthRate = 0
             
@@ -295,33 +391,36 @@ class GameScene: SKScene {
         }
     }
     
-    func playSound(_ sound: String) {
-        run(SKAction.playSoundFileNamed(sound, waitForCompletion: false))
+    func playSound(_ name: String) {
+        let sound = SKAction.playSoundFileNamed(name, waitForCompletion: false)
+        // sound.run(SKAction.changeVolume(to: Float(3), duration: 0))
+        run(sound)
+        //  run(SKAction.playSoundFileNamed(name, waitForCompletion: false))
     }
     
     /*
-    func replaceItem(hand : String, sprite: SKSpriteNode) {
-        if hand == "left" {
-            leftElementSprite?.removeFromParent()
-            leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
-            leftElement = movingElement.name
-        } else if hand == "right" {
-            rightElementSprite?.removeFromParent()
-            rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
-            rightElement = movingElement.name
-        }
-        sprite.position = CGPoint(x: 0 - 200, y: 200)
-        sprite.zPosition = 1
-        sprite.size.height = itemSize
-        sprite.size.width = itemSize
-        self.addChild(sprite)
-        movingItem.removeFromParent()
-        movingElement.sprite?.removeFromParent()
-        movingElement = nil
-    } */
+     func replaceItem(hand : String, sprite: SKSpriteNode) {
+     if hand == "left" {
+     leftElementSprite?.removeFromParent()
+     leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
+     leftElement = movingElement.name
+     } else if hand == "right" {
+     rightElementSprite?.removeFromParent()
+     rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
+     rightElement = movingElement.name
+     }
+     sprite.position = CGPoint(x: 0 - 200, y: 200)
+     sprite.zPosition = 1
+     sprite.size.height = itemSize
+     sprite.size.width = itemSize
+     self.addChild(sprite)
+     movingItem.removeFromParent()
+     movingElement.sprite?.removeFromParent()
+     movingElement = nil
+     } */
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
     }
     
     func withinDistance(itemPos: CGPoint, handPos: CGPoint, distance: Float) -> Bool { //Change name to pos1 and pos2
