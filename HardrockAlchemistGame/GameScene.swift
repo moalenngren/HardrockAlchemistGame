@@ -32,6 +32,8 @@ class GameScene: SKScene {
     var rightElement = ""
     var rightElementSprite : SKSpriteNode!
     var popUpText = SKLabelNode(fontNamed: "PerryGothic")
+    let arrowLeft = SKSpriteNode(imageNamed: "ArrowLeft")
+    let arrowRight = SKSpriteNode(imageNamed: "ArrowRight")
     
     enum Cases {
         case InventThis, AlreadyInvented, Nope
@@ -121,6 +123,19 @@ class GameScene: SKScene {
         
         itemSize = CGFloat(scroll.size.width / 6.5)
         
+        arrowLeft.size.height = itemSize * 0.8
+        arrowLeft.size.width = itemSize * 0.8
+        arrowLeft.position = CGPoint(x: 0 - scroll.size.width / 2 + 20, y: scroll.position.y - scroll.size.height / 2 + arrowLeft.size.height / 2 + 10)
+        arrowLeft.zPosition = 7
+        addChild(arrowLeft)
+        arrowRight.size.height = itemSize * 0.8
+        arrowRight.size.width = itemSize * 0.8
+        arrowRight.position = CGPoint(x: scroll.size.width / 2 - 20, y: scroll.position.y - scroll.size.height / 2 + arrowRight.size.height / 2 + 10)
+        arrowRight.zPosition = 7
+        addChild(arrowRight)
+        
+        
+        
         reloadInventory()
         /*
          for item in discoveredItems {
@@ -141,11 +156,10 @@ class GameScene: SKScene {
     func reloadInventory() {
         for item in discoveredItems {
             let elementSprite = SKSpriteNode(imageNamed: item)
-           // let size = scroll.size.width / 6
             elementSprite.size.width = itemSize
             elementSprite.size.height = itemSize
-            let pos = itemSize * CGFloat(Int(discoveredItems.index(of: item)!) + 1) + 20
-            let xPos = 0 - (scroll.size.width / 2) + pos
+            let pos1 = itemSize * CGFloat(Int(discoveredItems.index(of: item)!) + 1) + 20
+            let xPos = 0 - (scroll.size.width / 2) + pos1
             elementSprite.position = CGPoint(x: xPos , y: scroll.position.y + 40 )
             let element = Element(sprite: elementSprite, name: item, index: Int(discoveredItems.index(of: item)!), chosen: false, loc: elementSprite.position)
             elementSprite.zPosition = 4
@@ -294,9 +308,10 @@ class GameScene: SKScene {
             playSound("NewDiscovery.mp3")
             discoveredItems.append(thisDiscovery)
             
-            let waitAction = SKAction.wait(forDuration: TimeInterval(2))
+            let waitAction = SKAction.wait(forDuration: TimeInterval(2)) //Make all waits to a function which takes a time and a block
             run(waitAction, completion: {
                 
+                self.removeItemsFromHands()
                 self.popUp.position = CGPoint(x: 0, y: 0)
                 self.popUp.yScale = 0.8
                 self.popUp.xScale = 0.8
@@ -341,6 +356,13 @@ class GameScene: SKScene {
             playSound("Error")
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         }
+        let waitAction = SKAction.wait(forDuration: TimeInterval(1))
+        run(waitAction, completion: {
+            self.removeItemsFromHands()
+        })
+    }
+    
+    func removeItemsFromHands() {
         leftElementSprite?.removeFromParent()
         leftElement = ""
         movingElement = nil //??
@@ -349,16 +371,18 @@ class GameScene: SKScene {
     }
     
     func playDiscoveryAnimation() {
+        playSnapAnimation(pos: leftElementSprite.position, zPos: 1)
+        playSnapAnimation(pos: rightElementSprite.position, zPos: 3)
         animationIsShowing = true
         if let discovery = SKEmitterNode(fileNamed: "DiscoveryParticles") {
             addChild(discovery)
             discovery.position = CGPoint(x: -20, y: -40)
             discovery.advanceSimulationTime(10)
             discovery.zPosition = 5
-            discovery.particleLifetime = 3
+            discovery.particleLifetime = 0.3
             // discovery.particleBirthRate = 0
             
-            let waitAction = SKAction.wait(forDuration: TimeInterval(discovery.particleLifetime))
+            let waitAction = SKAction.wait(forDuration: TimeInterval(2))
             discovery.run(waitAction, completion: {
                 discovery.removeFromParent()
             })
@@ -369,7 +393,7 @@ class GameScene: SKScene {
             fire.position = CGPoint(x: -20, y: -40)
             fire.advanceSimulationTime(10)
             fire.zPosition = 6
-            fire.particleLifetime = 3
+            fire.particleLifetime = 2
             // discovery.particleBirthRate = 0
             
             let waitAction = SKAction.wait(forDuration: TimeInterval(fire.particleLifetime))
