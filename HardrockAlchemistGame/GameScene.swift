@@ -31,7 +31,7 @@ class GameScene: SKScene {
     var leftElementSprite : SKSpriteNode!
     var rightElement = ""
     var rightElementSprite : SKSpriteNode!
-    var popUpText = SKLabelNode(fontNamed: "PERRYGOT")
+    var popUpText = SKLabelNode(fontNamed: "PerryGothic")
     
     enum Cases {
         case InventThis, AlreadyInvented, Nope
@@ -119,7 +119,7 @@ class GameScene: SKScene {
         itemImage2.zPosition = 3
         addChild(itemImage2)
         
-        itemSize = CGFloat(scroll.size.width / 6)
+        itemSize = CGFloat(scroll.size.width / 6.5)
         
         reloadInventory()
         /*
@@ -141,10 +141,10 @@ class GameScene: SKScene {
     func reloadInventory() {
         for item in discoveredItems {
             let elementSprite = SKSpriteNode(imageNamed: item)
-            let size = scroll.size.width / 6
-            elementSprite.size.width = size
-            elementSprite.size.height = size
-            let pos = size * CGFloat(Int(discoveredItems.index(of: item)!) + 1) + 20
+           // let size = scroll.size.width / 6
+            elementSprite.size.width = itemSize
+            elementSprite.size.height = itemSize
+            let pos = itemSize * CGFloat(Int(discoveredItems.index(of: item)!) + 1) + 20
             let xPos = 0 - (scroll.size.width / 2) + pos
             elementSprite.position = CGPoint(x: xPos , y: scroll.position.y + 40 )
             let element = Element(sprite: elementSprite, name: item, index: Int(discoveredItems.index(of: item)!), chosen: false, loc: elementSprite.position)
@@ -316,7 +316,12 @@ class GameScene: SKScene {
                 self.popUpText.position = CGPoint(x: 0, y: self.popUp.size.height / 2 - 250)
                 self.popUpText.zPosition = 8
                 self.addChild(self.popUpText)
-                //Set labels and pics here!
+                
+                //Ta reda på alla fontnamn!!!!
+                /*
+                for name in UIFont.familyNames {
+                    print(name)
+                } */
                 
                 
             })

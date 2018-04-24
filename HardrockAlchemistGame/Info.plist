@@ -46,7 +46,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>PERRYGOT.TTF</string>
+		<string>Livingst.ttf</string>
 		<string>Sketch Gothic School.ttf</string>
+		<string>BlackCastleMF.ttf</string>
 	</array>
 </dict>
 </plist>
