@@ -16,6 +16,7 @@ class GameScene: SKScene {
     var man = SKSpriteNode(imageNamed: "OnlyAlchemist_1")
     var table = SKSpriteNode(imageNamed: "Table")
     var scroll = SKSpriteNode(imageNamed: "Scroll")
+    let scrollContainer = SKSpriteNode()
     var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
     var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
     let popUp = SKSpriteNode(imageNamed: "PopUpWindow")
@@ -34,6 +35,7 @@ class GameScene: SKScene {
     var popUpText = SKLabelNode(fontNamed: "PerryGothic")
     let arrowLeft = SKSpriteNode(imageNamed: "ArrowLeft")
     let arrowRight = SKSpriteNode(imageNamed: "ArrowRight")
+    var currentPage = 0
     
     enum Cases {
         case InventThis, AlreadyInvented, Nope
@@ -121,7 +123,12 @@ class GameScene: SKScene {
         itemImage2.zPosition = 3
         addChild(itemImage2)
         
-        itemSize = CGFloat(scroll.size.width / 6.5)
+        itemSize = CGFloat(scrollContainer.size.width / 6.3)
+        
+        scrollContainer.size.height = scroll.size.height
+        scrollContainer.size.width = scroll.size.width - 80
+        scrollContainer.position = scroll.position
+        addChild(scrollContainer) //Do I have to fill this with a sprite??
         
         arrowLeft.size.height = itemSize * 0.8
         arrowLeft.size.width = itemSize * 0.8
@@ -135,8 +142,8 @@ class GameScene: SKScene {
         addChild(arrowRight)
         
         
-        
-        reloadInventory()
+        reloadPage(0)
+      //  reloadInventory()
         /*
          for item in discoveredItems {
          let elementSprite = SKSpriteNode(imageNamed: item)
@@ -165,6 +172,99 @@ class GameScene: SKScene {
             elementSprite.zPosition = 4
             addChild(elementSprite)
             allVisibleItems.append(element)
+        }
+    }
+    
+    //Anropas när man klickar på pilarna!!!!! skickar då med currentPage +1 eller - 1
+    func reloadPage(_ page : Int) {
+        //deletea alla element från allVisibleElement, så att de inte finns eller syns
+        allVisibleItems.removeAll()
+        let lowerBounds = page * 20
+        let higherBounds = page * 20 + 20
+        for index in lowerBounds..<higherBounds {
+            
+            if let item : String = discoveredItems[index] { //Is this working? Or else do with .safe
+                
+                let elementSprite = SKSpriteNode(imageNamed: item)
+                elementSprite.size.width = itemSize
+                elementSprite.size.height = itemSize
+                //set pos
+                
+                var nr = index - 20 * page //Evaluate directly in the line below??
+                setItemPosition(nr : nr, sprite : elementSprite)
+                
+                let element = Element(sprite: elementSprite, name: item, index: index, chosen: false, loc: elementSprite.position)
+                addChild(elementSprite)
+                allVisibleItems.append(element) //Or check in touches began and moved if they can handle sprites instead of Elements, för då slipper man göra let element oh bara kollar if item in ngn spritearray
+                
+                let title = SKLabelNode(fontNamed: "Perrygothic")
+                title.text = "\(item)"
+                title.fontColor = SKColor.black
+                title.fontSize = 18
+                title.horizontalAlignmentMode = .center
+                title.position = CGPoint(x: elementSprite.position.x, y: elementSprite.position.y + itemSize * 0.7 )
+                title.zPosition = 8
+                addChild(title)
+                
+            }
+        }
+        setArrows(page: page)
+    }
+    
+    func setItemPosition(nr : Int, sprite : SKSpriteNode) {
+        
+        // Y Pos
+        if (0...4).contains(nr) {
+            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) * 3
+        } else if (5...9).contains(nr) {
+            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8)
+        } else if (10...14).contains(nr) {
+            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8)
+        } else if (15...19).contains(nr) {
+            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) * 3
+        }
+        
+        //X Pos
+        if nr == 0 || nr == 5 || nr == 10 || nr == 15 {
+            sprite.position.x = scrollContainer.position.x - (scrollContainer.size.width / 12) * 4
+        } else if nr == 1 || nr == 6 || nr == 11 || nr == 16  {
+            sprite.position.x = scrollContainer.position.x - (scrollContainer.size.width / 12) * 2
+        } else if nr == 2 || nr == 7 || nr == 12 || nr == 17 {
+            sprite.position.x = scrollContainer.position.x // - (scrollContainer.size.width / 12) * 0
+        } else if nr == 3 || nr == 8 || nr == 13 || nr == 18 {
+            sprite.position.x = scrollContainer.position.x + (scrollContainer.size.width / 12) * 2
+        } else if nr == 4 || nr == 9 || nr == 14 || nr == 19 {
+            sprite.position.x = scrollContainer.position.x + (scrollContainer.size.width / 12) * 4
+        }
+    }
+    
+    func indexContainsNr(nr : Int, index : Int) -> Bool {
+        var i = index
+        var n = 0
+        let nrToLookFor = nr
+        var isIn = false
+        
+        while (i > 0) {
+            n = i % 10
+            i = i / 10
+            if (n == nrToLookFor) {
+                isIn = true
+            }
+        }
+        print ("Numret finns = \(isIn)")
+        return isIn
+    }
+    
+    func setArrows(page : Int) {
+        if page == 0 {
+            arrowLeft.isHidden = true
+        } else {
+            arrowLeft.isHidden = false
+        }
+        if discoveredItems.count < page * 20 + 20 {
+            arrowRight.isHidden = true
+        } else {
+            arrowRight.isHidden = false
         }
     }
     
@@ -210,6 +310,10 @@ class GameScene: SKScene {
                     rightElementSprite?.removeFromParent()
                     rightElement = ""
                     movingElement = nil //??
+                } else if withinDistance(itemPos: location, handPos: arrowLeft.position, distance: 40) && !arrowLeft.isHidden { //Left arrow
+                    reloadPage(currentPage - 1)
+                } else if withinDistance(itemPos: location, handPos: arrowRight.position, distance: 40) && !arrowRight.isHidden { //Right arrow
+                    reloadPage(currentPage + 1)
                 }
             }
         }
