@@ -16,15 +16,17 @@ class GameScene: SKScene {
     var man = SKSpriteNode(imageNamed: "OnlyAlchemist_1")
     var table = SKSpriteNode(imageNamed: "Table")
     var scroll = SKSpriteNode(imageNamed: "Scroll")
-    let scrollContainer = SKSpriteNode()
+    let scrollContainer = SKSpriteNode(imageNamed: "transparent")
     var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
     var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
     let popUp = SKSpriteNode(imageNamed: "PopUpWindow")
     var popUpItem : SKSpriteNode!
     var popUpIsShowing = false
     var animationIsShowing = false
-    var discoveredItems = ["Earth", "Air", "Fire", "Water"]
+    var discoveredItems = ["Earth", "Air", "Fire", "Water", "Rain", "Mud", "Cloud", "Stone", "Sand", "Time", "Glass", "Pressure", "Wind", "Energy", "Lake", "Sea", "Wave", "Electricity", "Lightning"] //Reset to standard after testing
     var allVisibleItems : [Element] = []
+    var allVisibleItemSprites : [SKSpriteNode] = []
+    var allTitles : [SKLabelNode] = []
     var movingItem : SKSpriteNode!
     var movingElement : Element!
     var itemSize : CGFloat!
@@ -123,11 +125,12 @@ class GameScene: SKScene {
         itemImage2.zPosition = 3
         addChild(itemImage2)
         
-        itemSize = CGFloat(scrollContainer.size.width / 6.3)
+        itemSize = CGFloat(scroll.size.width / 8.6)
         
-        scrollContainer.size.height = scroll.size.height
-        scrollContainer.size.width = scroll.size.width - 80
-        scrollContainer.position = scroll.position
+        scrollContainer.size.height = scroll.size.height - 15
+        scrollContainer.size.width = scroll.size.width - 15
+        scrollContainer.position = CGPoint(x: scroll.position.x + 10, y : scroll.position.y - 10)
+        scrollContainer.zPosition = 4
         addChild(scrollContainer) //Do I have to fill this with a sprite??
         
         arrowLeft.size.height = itemSize * 0.8
@@ -140,61 +143,42 @@ class GameScene: SKScene {
         arrowRight.position = CGPoint(x: scroll.size.width / 2 - 20, y: scroll.position.y - scroll.size.height / 2 + arrowRight.size.height / 2 + 10)
         arrowRight.zPosition = 7
         addChild(arrowRight)
-        
-        
+   
         reloadPage(0)
-      //  reloadInventory()
-        /*
-         for item in discoveredItems {
-         let elementSprite = SKSpriteNode(imageNamed: item)
-         let size = scroll.size.width / 6
-         elementSprite.size.width = size
-         elementSprite.size.height = size
-         let pos = size * CGFloat(Int(discoveredItems.index(of: item)!) + 1) + 20
-         let xPos = 0 - (scroll.size.width / 2) + pos
-         elementSprite.position = CGPoint(x: xPos , y: scroll.position.y + 40 )
-         let element = Element(sprite: elementSprite, name: item, index: Int(discoveredItems.index(of: item)!), chosen: false, loc: elementSprite.position)
-         elementSprite.zPosition = 4
-         addChild(elementSprite)
-         allVisibleItems.append(element)
-         } */
     }
     
-    func reloadInventory() {
-        for item in discoveredItems {
-            let elementSprite = SKSpriteNode(imageNamed: item)
-            elementSprite.size.width = itemSize
-            elementSprite.size.height = itemSize
-            let pos1 = itemSize * CGFloat(Int(discoveredItems.index(of: item)!) + 1) + 20
-            let xPos = 0 - (scroll.size.width / 2) + pos1
-            elementSprite.position = CGPoint(x: xPos , y: scroll.position.y + 40 )
-            let element = Element(sprite: elementSprite, name: item, index: Int(discoveredItems.index(of: item)!), chosen: false, loc: elementSprite.position)
-            elementSprite.zPosition = 4
-            addChild(elementSprite)
-            allVisibleItems.append(element)
-        }
-    }
-    
-    //Anropas när man klickar på pilarna!!!!! skickar då med currentPage +1 eller - 1
     func reloadPage(_ page : Int) {
-        //deletea alla element från allVisibleElement, så att de inte finns eller syns
+        
+        for item in allVisibleItemSprites {
+            item.removeFromParent()
+        }
+        for title in allTitles {
+            title.removeFromParent()
+        }
         allVisibleItems.removeAll()
+ 
+        var sorted : [String]
+        sorted = discoveredItems.sorted(by: <)
         let lowerBounds = page * 20
         let higherBounds = page * 20 + 20
         for index in lowerBounds..<higherBounds {
-            
-            if let item : String = discoveredItems[index] { //Is this working? Or else do with .safe
-                
+
+            if index < sorted.count {
+                let item = sorted[index]
                 let elementSprite = SKSpriteNode(imageNamed: item)
                 elementSprite.size.width = itemSize
                 elementSprite.size.height = itemSize
-                //set pos
                 
-                var nr = index - 20 * page //Evaluate directly in the line below??
+                let nr = index - 20 * page //Evaluate directly in the line below??
                 setItemPosition(nr : nr, sprite : elementSprite)
                 
-                let element = Element(sprite: elementSprite, name: item, index: index, chosen: false, loc: elementSprite.position)
+                print("Position of scrollContainer is \(scrollContainer.position)")
+                print("Nr is \(nr)")
+                
+                let element = Element(sprite: elementSprite, name: item, index: Int(sorted.index(of: item)!), chosen: false, loc: elementSprite.position)
+                elementSprite.zPosition = 5
                 addChild(elementSprite)
+                allVisibleItemSprites.append(elementSprite)
                 allVisibleItems.append(element) //Or check in touches began and moved if they can handle sprites instead of Elements, för då slipper man göra let element oh bara kollar if item in ngn spritearray
                 
                 let title = SKLabelNode(fontNamed: "Perrygothic")
@@ -202,10 +186,11 @@ class GameScene: SKScene {
                 title.fontColor = SKColor.black
                 title.fontSize = 18
                 title.horizontalAlignmentMode = .center
-                title.position = CGPoint(x: elementSprite.position.x, y: elementSprite.position.y + itemSize * 0.7 )
-                title.zPosition = 8
+                title.position = CGPoint(x: elementSprite.position.x, y: elementSprite.position.y - itemSize * 0.75 )
+                title.zPosition = 4
                 addChild(title)
-                
+                allTitles.append(title)
+                print("Adding \(item) to inventory")
             }
         }
         setArrows(page: page)
@@ -213,15 +198,17 @@ class GameScene: SKScene {
     
     func setItemPosition(nr : Int, sprite : SKSpriteNode) {
         
+        print("Setting position")
+        
         // Y Pos
         if (0...4).contains(nr) {
             sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) * 3
         } else if (5...9).contains(nr) {
-            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8)
+            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) + 4
         } else if (10...14).contains(nr) {
-            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8)
+            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) + 4
         } else if (15...19).contains(nr) {
-            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) * 3
+            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) * 3 + 4
         }
         
         //X Pos
@@ -261,7 +248,7 @@ class GameScene: SKScene {
         } else {
             arrowLeft.isHidden = false
         }
-        if discoveredItems.count < page * 20 + 20 {
+        if discoveredItems.count < page * 20 + 21 {
             arrowRight.isHidden = true
         } else {
             arrowRight.isHidden = false
@@ -280,7 +267,7 @@ class GameScene: SKScene {
                 popUpIsShowing = false
                 popUpText.removeFromParent()
                 
-                reloadInventory()
+                reloadPage(currentPage)
                 print("reloads inventory")
                 
             } else if !animationIsShowing {
@@ -291,7 +278,7 @@ class GameScene: SKScene {
                         movingItem.size.width = itemSize
                         print("Clicking image: \(String(describing: item.name))!)")
                         movingItem.position = location
-                        movingItem.zPosition = 5
+                        movingItem.zPosition = 6
                         self.addChild(movingItem)
                         movingElement = Element(sprite: movingItem, name: item.name, index: item.index, chosen: true, loc: location)
                         print("Adding \(movingElement.name) as moving element")
@@ -311,9 +298,14 @@ class GameScene: SKScene {
                     rightElement = ""
                     movingElement = nil //??
                 } else if withinDistance(itemPos: location, handPos: arrowLeft.position, distance: 40) && !arrowLeft.isHidden { //Left arrow
-                    reloadPage(currentPage - 1)
+                    currentPage = currentPage - 1 //Make this code and the code for arrow right to be a func with parameter - 1 or + 1
+                    reloadPage(currentPage)
+                    playSound("PageTurn")
                 } else if withinDistance(itemPos: location, handPos: arrowRight.position, distance: 40) && !arrowRight.isHidden { //Right arrow
-                    reloadPage(currentPage + 1)
+                    currentPage = currentPage + 1
+                    playSound("PageTurn")
+                    reloadPage(currentPage)
+                    
                 }
             }
         }
@@ -338,8 +330,7 @@ class GameScene: SKScene {
                 print("Ended touches at left hand")
                 playSound("Snap.mp3")
                 playSnapAnimation(pos: CGPoint(x: 0 - 200, y: 200), zPos: 1)
-                
-                //Show animation
+
                 movingItem.position = CGPoint(x: 0 - 200, y: 200)
                 movingItem.zPosition = 1
                 
@@ -409,7 +400,8 @@ class GameScene: SKScene {
         }
         if makeNewItem == .InventThis {
             playDiscoveryAnimation()
-            playSound("NewDiscovery.mp3")
+            playSound("NewDiscovery")
+            playSound("EvilLaugh")
             discoveredItems.append(thisDiscovery)
             
             let waitAction = SKAction.wait(forDuration: TimeInterval(2)) //Make all waits to a function which takes a time and a block
@@ -428,9 +420,9 @@ class GameScene: SKScene {
                 self.popUpItem.xScale = 0.3
                 self.popUpItem.zPosition = 8
                 self.addChild(self.popUpItem)
-                self.popUpText.text = "\(thisDiscovery.uppercased())"
+                self.popUpText.text = "\(thisDiscovery)"
                 self.popUpText.fontColor = SKColor.black
-                self.popUpText.fontSize = 70
+                self.popUpText.fontSize = 60
                 self.popUpText.horizontalAlignmentMode = .center
                 self.popUpText.position = CGPoint(x: 0, y: self.popUp.size.height / 2 - 250)
                 self.popUpText.zPosition = 8
