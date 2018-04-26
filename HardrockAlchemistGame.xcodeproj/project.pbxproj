@@ -75,6 +75,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7F14285D2091E69C00FC127F /* ParticleEffects */ = {
+			isa = PBXGroup;
+			children = (
+				7FBEF604208E7C5A00068C06 /* DiscoveryParticles.sks */,
+				7F72CB6E208E341E000C20B8 /* SnapAnimation.sks */,
+				7FBEF606208E7E7600068C06 /* DiscoveryFire.sks */,
+			);
+			path = ParticleEffects;
+			sourceTree = "<group>";
+		};
 		7F72CB482087678B000C20B8 = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +104,7 @@
 		7F72CB532087678B000C20B8 /* HardrockAlchemistGame */ = {
 			isa = PBXGroup;
 			children = (
+				7F14285D2091E69C00FC127F /* ParticleEffects */,
 				7FBEF60D208F23E000068C06 /* Sounds */,
 				7FBEF60C208F23CD00068C06 /* Fonts */,
 				7F72CB542087678B000C20B8 /* AppDelegate.swift */,
@@ -106,10 +117,7 @@
 				7F72CB632087678C000C20B8 /* LaunchScreen.storyboard */,
 				7F72CB662087678C000C20B8 /* Info.plist */,
 				7F72CB6C208CFFC7000C20B8 /* Element.swift */,
-				7F72CB6E208E341E000C20B8 /* SnapAnimation.sks */,
 				7FBEF602208E769500068C06 /* ElementList.swift */,
-				7FBEF604208E7C5A00068C06 /* DiscoveryParticles.sks */,
-				7FBEF606208E7E7600068C06 /* DiscoveryFire.sks */,
 			);
 			path = HardrockAlchemistGame;
 			sourceTree = "<group>";
