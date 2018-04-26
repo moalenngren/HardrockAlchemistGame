@@ -19,7 +19,8 @@ class GameScene: SKScene {
     var man = SKSpriteNode(imageNamed: "OnlyAlchemist_1")
     var table = SKSpriteNode(imageNamed: "Table")
     var scroll = SKSpriteNode(imageNamed: "Scroll")
-    let scrollContainer = SKSpriteNode(imageNamed: "transparent")
+  //  let scrollContainer = SKSpriteNode(imageNamed: "transparent")
+    var scrollContainer = SKSpriteNode()
     var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
     var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
     let popUp = SKSpriteNode(imageNamed: "PopUpWindow")
@@ -41,6 +42,8 @@ class GameScene: SKScene {
     let arrowLeft = SKSpriteNode(imageNamed: "ArrowLeft")
     let arrowRight = SKSpriteNode(imageNamed: "ArrowRight")
     var currentPage = 0
+    var coinsCount = 0 //Load this from UserDefauls
+    var coinBagSprite = SKSpriteNode(imageNamed: "CoinBag")
     
     enum Cases {
         case InventThis, AlreadyInvented, Nope
@@ -54,6 +57,7 @@ class GameScene: SKScene {
           //  print ("if: nuvarande device är bredare i förhållande till höjd, jämfört med bilden")
           //  print("Screen bounds \(UIScreen.main.bounds.height / UIScreen.main.bounds.width)")
           //  print("circle höjd/bredd=\(alchemistCircle.size.height / alchemistCircle.size.width)")
+            print("iPad")
             alchemistCircle.position = CGPoint(x: 0, y: 0)
             alchemistCircle.zPosition = 0
             alchemistCircle.size = self.frame.size
@@ -83,7 +87,8 @@ class GameScene: SKScene {
             scroll.zPosition = 3
             addChild(scroll)
         } else { // Else if iPhone X, alltså om devicen är lika smal eller smalare än iPhoneX's mått!!
-            titleSize = 18
+            print("iPhone")
+            titleSize = 17
             
             alchemistCircle.position = CGPoint(x: 0, y: 0 - 50)
             alchemistCircle.zPosition = 0
@@ -108,8 +113,8 @@ class GameScene: SKScene {
             
             scroll.size.height = self.frame.size.height / 2.5
             scroll.size.width = self.frame.size.width
-            scroll.yScale = 0.9
-            scroll.xScale = 0.9
+            scroll.yScale = 0.93
+            scroll.xScale = 0.93
             scroll.position = CGPoint(x: 0, y: (-self.frame.size.height / 2) + (scroll.size.height / 2) + 22)
             scroll.zPosition = 3
             addChild(scroll)
@@ -131,13 +136,13 @@ class GameScene: SKScene {
         itemImage2.zPosition = 3
         addChild(itemImage2)
         
-        itemSize = CGFloat(scroll.size.width / 8.6)
+        itemSize = CGFloat(scroll.size.width / 8.8) //IF iPhoneX make this smaller
         
         scrollContainer.size.height = scroll.size.height - 15
         scrollContainer.size.width = scroll.size.width - 15
         scrollContainer.position = CGPoint(x: scroll.position.x + 10, y : scroll.position.y - 10)
         scrollContainer.zPosition = 4
-        addChild(scrollContainer) //Do I have to fill this with a sprite??
+        addChild(scrollContainer)
         
         arrowLeft.size.height = itemSize * 0.8
         arrowLeft.size.width = itemSize * 0.8
@@ -149,6 +154,13 @@ class GameScene: SKScene {
         arrowRight.position = CGPoint(x: scroll.size.width / 2 - 20, y: scroll.position.y - scroll.size.height / 2 + arrowRight.size.height / 2 + 10)
         arrowRight.zPosition = 7
         addChild(arrowRight)
+        
+        coinBagSprite.size.height = itemSize
+        coinBagSprite.size.width = itemSize
+        coinBagSprite.position = CGPoint(x: frame.size.width / 2 - coinBagSprite.size.width / 2 - 60, y: frame.size.height / 2 - coinBagSprite.size.height / 2 - 60)
+        coinBagSprite.zPosition = 0
+        addChild(coinBagSprite)
+        
         
         if let musicURL = Bundle.main.url(forResource: "BackgroundMusicPlaceholder", withExtension: "mp3") {
             backgroundMusic = SKAudioNode(url: musicURL)
@@ -220,11 +232,11 @@ class GameScene: SKScene {
         if (0...4).contains(nr) {
             sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) * 3
         } else if (5...9).contains(nr) {
-            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) + 6
+            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) + 12
         } else if (10...14).contains(nr) {
-            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) + 6
+            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) + 12
         } else if (15...19).contains(nr) {
-            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) * 3 + 6
+            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) * 3 + 12
         }
         
         //X Pos
