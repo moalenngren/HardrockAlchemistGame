@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		7F33C97E2090D1D0006C82BB /* PageTurn.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F33C97D2090D1D0006C82BB /* PageTurn.mp3 */; };
 		7F33C9802090D37A006C82BB /* EvilLaugh.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7F33C97F2090D37A006C82BB /* EvilLaugh.wav */; };
+		7F33C9832091A44C006C82BB /* BackgroundMusicPlaceholder.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F33C9822091A44C006C82BB /* BackgroundMusicPlaceholder.mp3 */; };
+		7F33C9872091A54D006C82BB /* CellarDrone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F33C9862091A54D006C82BB /* CellarDrone.mp3 */; };
 		7F5F85CC208F32BC00D0AD49 /* Livingst.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5F85CB208F32BC00D0AD49 /* Livingst.ttf */; };
 		7F5F85CE208F34C500D0AD49 /* BlackCastleMF.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5F85CD208F34C500D0AD49 /* BlackCastleMF.ttf */; };
 		7F72CB552087678B000C20B8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F72CB542087678B000C20B8 /* AppDelegate.swift */; };
@@ -35,6 +37,8 @@
 /* Begin PBXFileReference section */
 		7F33C97D2090D1D0006C82BB /* PageTurn.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = PageTurn.mp3; sourceTree = "<group>"; };
 		7F33C97F2090D37A006C82BB /* EvilLaugh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = EvilLaugh.wav; sourceTree = "<group>"; };
+		7F33C9822091A44C006C82BB /* BackgroundMusicPlaceholder.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = BackgroundMusicPlaceholder.mp3; sourceTree = "<group>"; };
+		7F33C9862091A54D006C82BB /* CellarDrone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = CellarDrone.mp3; sourceTree = "<group>"; };
 		7F5F85CB208F32BC00D0AD49 /* Livingst.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Livingst.ttf; sourceTree = "<group>"; };
 		7F5F85CD208F34C500D0AD49 /* BlackCastleMF.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = BlackCastleMF.ttf; sourceTree = "<group>"; };
 		7F72CB512087678B000C20B8 /* HardrockAlchemistGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HardrockAlchemistGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,9 +129,11 @@
 			isa = PBXGroup;
 			children = (
 				7F72CB72208E5C9D000C20B8 /* Snap.mp3 */,
+				7F33C9822091A44C006C82BB /* BackgroundMusicPlaceholder.mp3 */,
 				7F33C97D2090D1D0006C82BB /* PageTurn.mp3 */,
 				7F72CB74208E690C000C20B8 /* NewDiscovery.mp3 */,
 				7FBEF5FE208E6B9800068C06 /* Pop.aiff */,
+				7F33C9862091A54D006C82BB /* CellarDrone.mp3 */,
 				7F33C97F2090D37A006C82BB /* EvilLaugh.wav */,
 				7FBEF600208E735C00068C06 /* Snap2.wav */,
 			);
@@ -192,6 +198,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F33C9872091A54D006C82BB /* CellarDrone.mp3 in Resources */,
 				7F72CB75208E690C000C20B8 /* NewDiscovery.mp3 in Resources */,
 				7F72CB6F208E341E000C20B8 /* SnapAnimation.sks in Resources */,
 				7FBEF607208E7E7600068C06 /* DiscoveryFire.sks in Resources */,
@@ -202,6 +209,7 @@
 				7F72CB572087678B000C20B8 /* GameScene.sks in Resources */,
 				7F72CB622087678C000C20B8 /* Assets.xcassets in Resources */,
 				7FBEF605208E7C5A00068C06 /* DiscoveryParticles.sks in Resources */,
+				7F33C9832091A44C006C82BB /* BackgroundMusicPlaceholder.mp3 in Resources */,
 				7F72CB652087678C000C20B8 /* LaunchScreen.storyboard in Resources */,
 				7F5F85CE208F34C500D0AD49 /* BlackCastleMF.ttf in Resources */,
 				7F5F85CC208F32BC00D0AD49 /* Livingst.ttf in Resources */,

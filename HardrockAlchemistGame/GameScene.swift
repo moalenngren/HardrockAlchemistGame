@@ -12,6 +12,8 @@ import AudioToolbox
 
 class GameScene: SKScene {
     
+    var backgroundMusic: SKAudioNode!
+    var backgroundDrone: SKAudioNode!
     var alchemistCircle = SKSpriteNode(imageNamed: "Circle")
     var man = SKSpriteNode(imageNamed: "OnlyAlchemist_1")
     var table = SKSpriteNode(imageNamed: "Table")
@@ -143,6 +145,16 @@ class GameScene: SKScene {
         arrowRight.position = CGPoint(x: scroll.size.width / 2 - 20, y: scroll.position.y - scroll.size.height / 2 + arrowRight.size.height / 2 + 10)
         arrowRight.zPosition = 7
         addChild(arrowRight)
+        
+        if let musicURL = Bundle.main.url(forResource: "BackgroundMusicPlaceholder", withExtension: "mp3") {
+            backgroundMusic = SKAudioNode(url: musicURL)
+            addChild(backgroundMusic)
+        }
+        
+        if let musicURL = Bundle.main.url(forResource: "CellarDrone", withExtension: "mp3") {
+            backgroundDrone = SKAudioNode(url: musicURL)
+            addChild(backgroundDrone)
+        }
    
         reloadPage(0)
     }
