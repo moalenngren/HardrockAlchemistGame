@@ -19,9 +19,10 @@ class GameScene: SKScene {
     var man = SKSpriteNode(imageNamed: "OnlyAlchemist_1")
     var table = SKSpriteNode(imageNamed: "Table")
     var scroll = SKSpriteNode(imageNamed: "Scroll")
-  //  let scrollContainer = SKSpriteNode(imageNamed: "transparent")
     var scrollContainer = SKSpriteNode()
     var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
+    var leftItemPosition : CGPoint!
+    var rightItemPosition : CGPoint!
     var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
     let popUp = SKSpriteNode(imageNamed: "PopUpWindow")
     var popUpItem : SKSpriteNode!
@@ -69,7 +70,6 @@ class GameScene: SKScene {
             table.zPosition = 1
             table.size = self.frame.size
             table.yScale = 0.75
-            // table.xScale = 0.7
             addChild(table)
             
             man.position = CGPoint(x: 0, y: 0)
@@ -100,8 +100,6 @@ class GameScene: SKScene {
             table.position = CGPoint(x: 0, y: 0 - 50)
             table.zPosition = 1
             table.size = self.frame.size
-            // table.yScale = 0
-            // table.xScale = 0.7
             addChild(table)
             
             man.position = CGPoint(x: 0, y: 0 - 58)
@@ -126,15 +124,17 @@ class GameScene: SKScene {
         
         itemImage1.size.height = self.frame.size.height / 8
         itemImage1.size.width = itemImage1.size.height
-        itemImage1.position = CGPoint(x: 0 - 200, y: 200)
+        itemImage1.position = CGPoint(x: 0 - 230, y: 220) // (x: 0 - 200, y: 200)
         itemImage1.zPosition = 1
-        addChild(itemImage1)
+      //  addChild(itemImage1)
+        leftItemPosition = itemImage1.position
         
         itemImage2.size.height = self.frame.size.height / 8
         itemImage2.size.width = itemImage1.size.height
-        itemImage2.position = CGPoint(x: 240, y: 150)
+        itemImage2.position = CGPoint(x: 240, y: 210) // (x: 240, y: 150)
         itemImage2.zPosition = 3
-        addChild(itemImage2)
+      //  addChild(itemImage2)
+        rightItemPosition = itemImage2.position
         
         itemSize = CGFloat(scroll.size.width / 8.8) //IF iPhoneX make this smaller
         
@@ -155,9 +155,9 @@ class GameScene: SKScene {
         arrowRight.zPosition = 7
         addChild(arrowRight)
         
-        coinBagSprite.size.height = itemSize
-        coinBagSprite.size.width = itemSize
-        coinBagSprite.position = CGPoint(x: frame.size.width / 2 - coinBagSprite.size.width / 2 - 60, y: frame.size.height / 2 - coinBagSprite.size.height / 2 - 60)
+        coinBagSprite.size.height = itemSize * 1.5
+        coinBagSprite.size.width = itemSize * 1.5
+        coinBagSprite.position = CGPoint(x: frame.size.width / 2 - coinBagSprite.size.width / 2 - 40, y: frame.size.height / 2 - coinBagSprite.size.height / 2 - 60)
         coinBagSprite.zPosition = 0
         addChild(coinBagSprite)
         
@@ -197,7 +197,7 @@ class GameScene: SKScene {
                 elementSprite.size.width = itemSize
                 elementSprite.size.height = itemSize
                 
-                let nr = index - 20 * page //Evaluate directly in the line below??
+                let nr = index - 20 * page //Evaluate directly in the line below?? // 20 * page
                 setItemPosition(nr : nr, sprite : elementSprite)
                 
                 print("Position of scrollContainer is \(scrollContainer.position)")
@@ -214,7 +214,7 @@ class GameScene: SKScene {
                 title.fontColor = SKColor.black
                 title.fontSize = titleSize
                 title.horizontalAlignmentMode = .center
-                title.position = CGPoint(x: elementSprite.position.x, y: elementSprite.position.y - itemSize * 0.78 )
+                title.position = CGPoint(x: elementSprite.position.x, y: elementSprite.position.y - itemSize * 0.8 )
                 title.zPosition = 4
                 addChild(title)
                 allTitles.append(title)
@@ -232,11 +232,11 @@ class GameScene: SKScene {
         if (0...4).contains(nr) {
             sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) * 3
         } else if (5...9).contains(nr) {
-            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) + 12
+            sprite.position.y = scrollContainer.position.y + (scrollContainer.size.height / 8) + 7
         } else if (10...14).contains(nr) {
-            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) + 12
+            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) + 14
         } else if (15...19).contains(nr) {
-            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) * 3 + 12
+            sprite.position.y = scrollContainer.position.y - (scrollContainer.size.height / 8) * 3 + 21
         }
         
         //X Pos
@@ -300,10 +300,10 @@ class GameScene: SKScene {
                 
             } else if !animationIsShowing {
                 for item in allVisibleItems {
-                    if withinDistance(itemPos: item.loc, handPos: location, distance: 60) {
+                    if withinDistance(pos1: item.loc, pos2: location, distance: 60) {
                         movingItem = SKSpriteNode(imageNamed: item.name)
-                        movingItem.size.height = itemSize
-                        movingItem.size.width = itemSize
+                        movingItem.size.height = itemSize * 1.8
+                        movingItem.size.width = itemSize * 1.8
                         print("Clicking image: \(String(describing: item.name))!)")
                         movingItem.position = location
                         movingItem.zPosition = 6
@@ -313,23 +313,23 @@ class GameScene: SKScene {
                     }
                 }
                 
-                if withinDistance(itemPos: location, handPos: CGPoint(x: 0 - 200, y: 200), distance: 60) { //Delete element1
+                if withinDistance(pos1: location, pos2: leftItemPosition, distance: 60) && leftElementSprite != nil { //Delete left item
                     print("Clicked element1")
                     playSound("Snap2.wav") //Change to Pop
                     leftElementSprite?.removeFromParent()
                     leftElement = ""
                     movingElement = nil //??
-                } else if withinDistance(itemPos: location, handPos: CGPoint(x: 240, y: 150), distance: 60) { //Delete element2
+                } else if withinDistance(pos1: location, pos2: rightItemPosition, distance: 60) && rightElementSprite != nil { //Delete right item
                     playSound("Snap2.wav") //Change to Pop
                     print("Clicked element2")
                     rightElementSprite?.removeFromParent()
                     rightElement = ""
                     movingElement = nil //??
-                } else if withinDistance(itemPos: location, handPos: arrowLeft.position, distance: 40) && !arrowLeft.isHidden { //Left arrow
+                } else if withinDistance(pos1: location, pos2: arrowLeft.position, distance: 40) && !arrowLeft.isHidden { //Left arrow
                     currentPage = currentPage - 1 //Make this code and the code for arrow right to be a func with parameter - 1 or + 1
                     reloadPage(currentPage)
                     playSound("PageTurn")
-                } else if withinDistance(itemPos: location, handPos: arrowRight.position, distance: 40) && !arrowRight.isHidden { //Right arrow
+                } else if withinDistance(pos1: location, pos2: arrowRight.position, distance: 40) && !arrowRight.isHidden { //Right arrow
                     currentPage = currentPage + 1
                     playSound("PageTurn")
                     reloadPage(currentPage)
@@ -354,32 +354,26 @@ class GameScene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if movingElement != nil {
-            if withinDistance(itemPos: movingItem.position, handPos: CGPoint(x: 0 - 200, y: 200), distance: 150) { //snaps to left hand
-                print("Ended touches at left hand")
+            if withinDistance(pos1: movingItem.position, pos2: leftItemPosition, distance: 170) { //snaps to left hand
                 playSound("Snap.mp3")
                 playSnapAnimation(pos: CGPoint(x: 0 - 200, y: 200), zPos: 1)
 
                 movingItem.position = CGPoint(x: 0 - 200, y: 200)
                 movingItem.zPosition = 1
                 
-                //  replaceItem(hand: "left", sprite: leftElementSprite)
                 leftElementSprite?.removeFromParent()
                 leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
-                leftElementSprite.position = CGPoint(x: 0 - 200, y: 200)
+                leftElementSprite.position = leftItemPosition
                 leftElementSprite.zPosition = 1
-                leftElementSprite.size.height = itemSize
-                leftElementSprite.size.width = itemSize
+                leftElementSprite.size.height = itemSize * 1.6
+                leftElementSprite.size.width = itemSize * 1.6
                 self.addChild(leftElementSprite)
                 leftElement = movingElement.name
                 movingItem.removeFromParent()
                 movingElement.sprite?.removeFromParent()
                 movingElement = nil
                 
-                print("Left element is \(String(describing: leftElementSprite.texture))")
-                print("Left element name is \(leftElement)")
-                
-            } else if withinDistance(itemPos: movingItem.position, handPos: CGPoint(x: 240, y: 150), distance: 150) { //snaps to right hand
-                print("Ended touches at right hand")
+            } else if withinDistance(pos1: movingItem.position, pos2: rightItemPosition, distance: 170) { //snaps to right hand
                 playSound("Snap.mp3")
                 playSnapAnimation(pos: CGPoint(x: 240, y: 150), zPos: 3)
                 movingItem.position = CGPoint(x: 240, y: 150)
@@ -387,10 +381,10 @@ class GameScene: SKScene {
                 
                 rightElementSprite?.removeFromParent()
                 rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
-                rightElementSprite.position = CGPoint(x: 240, y: 150)
+                rightElementSprite.position = rightItemPosition
                 rightElementSprite.zPosition = 4
-                rightElementSprite.size.height = itemSize
-                rightElementSprite.size.width = itemSize
+                rightElementSprite.size.height = itemSize * 1.6
+                rightElementSprite.size.width = itemSize * 1.6
                 self.addChild(rightElementSprite)
                 rightElement = movingElement.name
                 movingItem.removeFromParent()
@@ -461,29 +455,33 @@ class GameScene: SKScene {
                 for name in UIFont.familyNames {
                     print(name)
                 } */
-                
-                
+
             })
             
             print("Congrats! You invented \(thisDiscovery.lowercased())")
-            print("adding \(thisDiscovery) to inventory")
+            print("Adding \(thisDiscovery) to inventory")
             index = index + 1
-            
             
         } else if makeNewItem == .AlreadyInvented {
             print("You've already invented \(thisDiscovery) before")
             playSound("Error")
             //Shaking animation
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate)) //Make a func for error messages
+            let waitAction = SKAction.wait(forDuration: TimeInterval(1.3))
+            run(waitAction, completion: {
+                self.removeItemsFromHands()
+            })
         } else if makeNewItem == .Nope {
             print("Nope, these two elements aren't doing anything")
             //Shaking animation
             playSound("Error")
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            let waitAction = SKAction.wait(forDuration: TimeInterval(1.3))
+            run(waitAction, completion: {
+                self.removeItemsFromHands()
+            })
         }
-        let waitAction = SKAction.wait(forDuration: TimeInterval(1))
-        run(waitAction, completion: {
-            self.removeItemsFromHands()
-        })
+        
     }
     
     func removeItemsFromHands() {
@@ -551,34 +549,13 @@ class GameScene: SKScene {
         //  run(SKAction.playSoundFileNamed(name, waitForCompletion: false))
     }
     
-    /*
-     func replaceItem(hand : String, sprite: SKSpriteNode) {
-     if hand == "left" {
-     leftElementSprite?.removeFromParent()
-     leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
-     leftElement = movingElement.name
-     } else if hand == "right" {
-     rightElementSprite?.removeFromParent()
-     rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
-     rightElement = movingElement.name
-     }
-     sprite.position = CGPoint(x: 0 - 200, y: 200)
-     sprite.zPosition = 1
-     sprite.size.height = itemSize
-     sprite.size.width = itemSize
-     self.addChild(sprite)
-     movingItem.removeFromParent()
-     movingElement.sprite?.removeFromParent()
-     movingElement = nil
-     } */
-    
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         
     }
     
-    func withinDistance(itemPos: CGPoint, handPos: CGPoint, distance: Float) -> Bool { //Change name to pos1 and pos2
-        let dx = itemPos.x - handPos.x
-        let dy = itemPos.y - handPos.y
+    func withinDistance(pos1: CGPoint, pos2: CGPoint, distance: Float) -> Bool {
+        let dx = pos1.x - pos2.x
+        let dy = pos1.y - pos2.y
         let hypotenusa = Float(sqrt(dx * dx + dy * dy))
         return hypotenusa < distance
     }
