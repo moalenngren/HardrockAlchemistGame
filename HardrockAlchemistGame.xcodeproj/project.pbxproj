@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F1428A6209899BC00FC127F /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1428A5209899BC00FC127F /* Model.swift */; };
 		7F33C97E2090D1D0006C82BB /* PageTurn.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F33C97D2090D1D0006C82BB /* PageTurn.mp3 */; };
 		7F33C9802090D37A006C82BB /* EvilLaugh.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7F33C97F2090D37A006C82BB /* EvilLaugh.wav */; };
 		7F33C9832091A44C006C82BB /* BackgroundMusicPlaceholder.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7F33C9822091A44C006C82BB /* BackgroundMusicPlaceholder.mp3 */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F1428A5209899BC00FC127F /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		7F33C97D2090D1D0006C82BB /* PageTurn.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = PageTurn.mp3; sourceTree = "<group>"; };
 		7F33C97F2090D37A006C82BB /* EvilLaugh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = EvilLaugh.wav; sourceTree = "<group>"; };
 		7F33C9822091A44C006C82BB /* BackgroundMusicPlaceholder.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = BackgroundMusicPlaceholder.mp3; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				7F72CB662087678C000C20B8 /* Info.plist */,
 				7F72CB6C208CFFC7000C20B8 /* Element.swift */,
 				7FBEF602208E769500068C06 /* ElementList.swift */,
+				7F1428A5209899BC00FC127F /* Model.swift */,
 			);
 			path = HardrockAlchemistGame;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				7FBEF603208E769500068C06 /* ElementList.swift in Sources */,
 				7F72CB5B2087678B000C20B8 /* GameScene.swift in Sources */,
 				7F72CB5D2087678B000C20B8 /* GameViewController.swift in Sources */,
+				7F1428A6209899BC00FC127F /* Model.swift in Sources */,
 				7F72CB6D208CFFC7000C20B8 /* Element.swift in Sources */,
 				7F72CB552087678B000C20B8 /* AppDelegate.swift in Sources */,
 			);

@@ -20,15 +20,14 @@ class GameScene: SKScene {
     var table = SKSpriteNode(imageNamed: "Table")
     var scroll = SKSpriteNode(imageNamed: "Scroll")
     var scrollContainer = SKSpriteNode()
-    var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
+  //  var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
     var leftItemPosition : CGPoint!
     var rightItemPosition : CGPoint!
-    var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
+  //  var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
     let popUp = SKSpriteNode(imageNamed: "PopUpWindow")
     var popUpItem : SKSpriteNode!
     var popUpIsShowing = false
     var animationIsShowing = false
-    var discoveredItems = ["Earth", "Air", "Fire", "Water", "Rain", "Mud", "Lava", "Hell", "Cloud", "Stone", "Sand", "Time", "Glass", "Pressure", "Wind", "Energy", "Lake", "Sea", "Wave", "Electricity", "Lightning"] //Reset to standard after testing
     var allVisibleItems : [Element] = []
     var allVisibleItemSprites : [SKSpriteNode] = []
     var allTitles : [SKLabelNode] = []
@@ -44,13 +43,15 @@ class GameScene: SKScene {
     let arrowRight = SKSpriteNode(imageNamed: "ArrowRight")
     var currentPage = 0
     var coinsCount = 0 //Load this from UserDefauls
-    var coinBagSprite = SKSpriteNode(imageNamed: "CoinBag")
+    var coinSprite = SKSpriteNode(imageNamed: "Coin") //Change name to coin
     
     enum Cases {
         case InventThis, AlreadyInvented, Nope
     }
     
     override func didMove(to view: SKView) {
+        
+        loadInventoryFromDefaults()
         
         if (UIScreen.main.bounds.height / UIScreen.main.bounds.width) <= (alchemistCircle.size.height / alchemistCircle.size.width){
             titleSize = 12
@@ -121,7 +122,7 @@ class GameScene: SKScene {
             print("Size of scroll = \(scroll.size.width)")
             print("Size of screen = \(UIScreen.main.bounds.width)")
         }
-        
+        /*
         itemImage1.size.height = self.frame.size.height / 8
         itemImage1.size.width = itemImage1.size.height
         itemImage1.position = CGPoint(x: 0 - 230, y: 220) // (x: 0 - 200, y: 200)
@@ -134,8 +135,11 @@ class GameScene: SKScene {
         itemImage2.position = CGPoint(x: 240, y: 210) // (x: 240, y: 150)
         itemImage2.zPosition = 3
       //  addChild(itemImage2)
-        rightItemPosition = itemImage2.position
+        rightItemPosition = itemImage2.position */
         
+        leftItemPosition = CGPoint(x: 0 - 230, y: 220) // (x: 0 - 200, y: 200)
+        rightItemPosition = CGPoint(x: 240, y: 210) // (x: 240, y: 150)
+
         itemSize = CGFloat(scroll.size.width / 8.8) //IF iPhoneX make this smaller
         
         scrollContainer.size.height = scroll.size.height - 15
@@ -155,11 +159,20 @@ class GameScene: SKScene {
         arrowRight.zPosition = 7
         addChild(arrowRight)
         
-        coinBagSprite.size.height = itemSize * 1.5
-        coinBagSprite.size.width = itemSize * 1.5
-        coinBagSprite.position = CGPoint(x: frame.size.width / 2 - coinBagSprite.size.width / 2 - 40, y: frame.size.height / 2 - coinBagSprite.size.height / 2 - 60)
-        coinBagSprite.zPosition = 0
-        addChild(coinBagSprite)
+        coinSprite.size.height = itemSize / 1.5
+        coinSprite.size.width = itemSize / 1.5
+        coinSprite.position = CGPoint(x: frame.size.width / 2 - coinSprite.size.width / 2 - 20, y: frame.size.height / 2 - coinSprite.size.height / 2 - 20)
+        coinSprite.zPosition = 0
+        addChild(coinSprite)
+        
+        let coinAmount = SKLabelNode(fontNamed: "Perrygothic")
+        coinAmount.text = "\(discoveredItems.count) / \(allItems.count)"
+        coinAmount.fontColor = SKColor.gray
+        coinAmount.fontSize = titleSize * 1.5
+        coinAmount.horizontalAlignmentMode = .center
+        coinAmount.position = CGPoint(x: coinSprite.position.x - 70, y: coinSprite.position.y)
+        coinAmount.zPosition = 0
+        addChild(coinAmount)
         
         
         if let musicURL = Bundle.main.url(forResource: "BackgroundMusicPlaceholder", withExtension: "mp3") {
@@ -171,12 +184,10 @@ class GameScene: SKScene {
             backgroundDrone = SKAudioNode(url: musicURL)
             addChild(backgroundDrone)
         }
-   
         reloadPage(0)
     }
     
     func reloadPage(_ page : Int) {
-        
         for item in allVisibleItemSprites {
             item.removeFromParent()
         }
@@ -302,8 +313,8 @@ class GameScene: SKScene {
                 for item in allVisibleItems {
                     if withinDistance(pos1: item.loc, pos2: location, distance: 60) {
                         movingItem = SKSpriteNode(imageNamed: item.name)
-                        movingItem.size.height = itemSize * 1.8
-                        movingItem.size.width = itemSize * 1.8
+                        movingItem.size.height = itemSize * 2
+                        movingItem.size.width = itemSize * 2
                         print("Clicking image: \(String(describing: item.name))!)")
                         movingItem.position = location
                         movingItem.zPosition = 6
@@ -425,6 +436,7 @@ class GameScene: SKScene {
             playSound("NewDiscovery")
             playSound("EvilLaugh")
             discoveredItems.append(thisDiscovery)
+            saveInventoryToUserDefaults(inventoryItems: discoveredItems)
             
             let waitAction = SKAction.wait(forDuration: TimeInterval(2)) //Make all waits to a function which takes a time and a block
             run(waitAction, completion: {
