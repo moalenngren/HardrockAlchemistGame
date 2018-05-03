@@ -31,19 +31,23 @@ class GameScene: SKScene {
     var allVisibleItems : [Element] = []
     var allVisibleItemSprites : [SKSpriteNode] = []
     var allTitles : [SKLabelNode] = []
-    var movingItem : SKSpriteNode!
+   // var movingItem : SKSpriteNode!
     var movingElement : Element!
     var itemSize : CGFloat!
     var leftElement = ""
     var leftElementSprite : SKSpriteNode!
     var rightElement = ""
     var rightElementSprite : SKSpriteNode!
-    var popUpText = SKLabelNode(fontNamed: "PerryGothic")
+    var popUpTitle = SKLabelNode(fontNamed: "PerryGothic") //PerryGothic
+    var popUpInfo = SKLabelNode(fontNamed: "PerryGothic")
     let arrowLeft = SKSpriteNode(imageNamed: "ArrowLeft")
     let arrowRight = SKSpriteNode(imageNamed: "ArrowRight")
     var currentPage = 0
-    var coinsCount = 0 //Load this from UserDefauls
-    var coinSprite = SKSpriteNode(imageNamed: "Coin") //Change name to coin
+    var coinAmount = SKLabelNode(fontNamed: "BlackCastleMF")
+    var coinSprite = SKSpriteNode(imageNamed: "Coin")
+    var evaluating = false
+    var notMoved = true
+    var startPoint : CGPoint?
     
     enum Cases {
         case InventThis, AlreadyInvented, Nope
@@ -52,6 +56,11 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         
         loadInventoryFromDefaults()
+        
+        /*
+        for name in UIFont.familyNames {
+            print(name)
+        } */
         
         if (UIScreen.main.bounds.height / UIScreen.main.bounds.width) <= (alchemistCircle.size.height / alchemistCircle.size.width){
             titleSize = 12
@@ -164,13 +173,12 @@ class GameScene: SKScene {
         coinSprite.position = CGPoint(x: frame.size.width / 2 - coinSprite.size.width / 2 - 20, y: frame.size.height / 2 - coinSprite.size.height / 2 - 20)
         coinSprite.zPosition = 0
         addChild(coinSprite)
-        
-        let coinAmount = SKLabelNode(fontNamed: "Perrygothic")
-        coinAmount.text = "\(discoveredItems.count) / \(allItems.count)"
-        coinAmount.fontColor = SKColor.gray
-        coinAmount.fontSize = titleSize * 1.5
-        coinAmount.horizontalAlignmentMode = .center
-        coinAmount.position = CGPoint(x: coinSprite.position.x - 70, y: coinSprite.position.y)
+
+        coinAmount.text = "\(discoveredItems.count)/\(allItems.count)"
+        coinAmount.fontColor = SKColor.brown
+        coinAmount.fontSize = titleSize * 2.2
+      //  coinAmount.horizontalAlignmentMode = .center
+        coinAmount.position = CGPoint(x: coinSprite.position.x - coinSprite.size.width - coinSprite.size.width / 2, y: coinSprite.position.y - coinSprite.size.height / 3)
         coinAmount.zPosition = 0
         addChild(coinAmount)
         
@@ -211,16 +219,14 @@ class GameScene: SKScene {
                 let nr = index - 20 * page //Evaluate directly in the line below?? // 20 * page
                 setItemPosition(nr : nr, sprite : elementSprite)
                 
-                print("Position of scrollContainer is \(scrollContainer.position)")
-                print("Nr is \(nr)")
-                
-                let element = Element(sprite: elementSprite, name: item, index: Int(sorted.index(of: item)!), chosen: false, loc: elementSprite.position)
+                //Change SOMEINFORMATION here, get it from the dictionary who has the ["discovery"] = name
+                let element = Element(sprite: elementSprite, name: item, info: "someInformation", index: Int(sorted.index(of: item)!), chosen: false, loc: elementSprite.position)
                 elementSprite.zPosition = 5
                 addChild(elementSprite)
                 allVisibleItemSprites.append(elementSprite)
                 allVisibleItems.append(element) //Or check in touches began and moved if they can handle sprites instead of Elements, för då slipper man göra let element oh bara kollar if item in ngn spritearray
                 
-                let title = SKLabelNode(fontNamed: "Perrygothic")
+                let title = SKLabelNode(fontNamed: "PerryGothic") //PerryGothic
                 title.text = "\(item)"
                 title.fontColor = SKColor.black
                 title.fontSize = titleSize
@@ -229,7 +235,7 @@ class GameScene: SKScene {
                 title.zPosition = 4
                 addChild(title)
                 allTitles.append(title)
-                print("Adding \(item) to inventory")
+              //  print("Adding \(item) to inventory")
             }
         }
         setArrows(page: page)
@@ -237,7 +243,7 @@ class GameScene: SKScene {
     
     func setItemPosition(nr : Int, sprite : SKSpriteNode) {
         
-        print("Setting position")
+       // print("Setting position")
         
         // Y Pos
         if (0...4).contains(nr) {
@@ -264,7 +270,7 @@ class GameScene: SKScene {
         }
     }
     
-    func indexContainsNr(nr : Int, index : Int) -> Bool {
+    func indexContainsNr(nr : Int, index : Int) -> Bool { //Delete this method?
         var i = index
         var n = 0
         let nrToLookFor = nr
@@ -277,7 +283,6 @@ class GameScene: SKScene {
                 isIn = true
             }
         }
-        print ("Numret finns = \(isIn)")
         return isIn
     }
     
@@ -304,7 +309,8 @@ class GameScene: SKScene {
                 popUpItem.removeFromParent()
                 popUp.removeFromParent()
                 popUpIsShowing = false
-                popUpText.removeFromParent()
+                popUpTitle.removeFromParent()
+                popUpInfo.removeFromParent()
                 
                 reloadPage(currentPage)
                 print("reloads inventory")
@@ -312,26 +318,34 @@ class GameScene: SKScene {
             } else if !animationIsShowing {
                 for item in allVisibleItems {
                     if withinDistance(pos1: item.loc, pos2: location, distance: 60) {
-                        movingItem = SKSpriteNode(imageNamed: item.name)
-                        movingItem.size.height = itemSize * 2
-                        movingItem.size.width = itemSize * 2
+                        
+                        if movingElement != nil {
+                          //  movingItem.removeFromParent()
+                            movingElement.sprite?.removeFromParent()
+                        }
+                        
+                        let sprite = SKSpriteNode(imageNamed: item.name)
+                        sprite.size.height = itemSize * 2
+                        sprite.size.width = itemSize * 2
                         print("Clicking image: \(String(describing: item.name))!)")
-                        movingItem.position = location
-                        movingItem.zPosition = 6
-                        self.addChild(movingItem)
-                        movingElement = Element(sprite: movingItem, name: item.name, index: item.index, chosen: true, loc: location)
+                        sprite.position = location
+                        sprite.zPosition = 6
+                        self.addChild(sprite)
+                        movingElement = Element(sprite: sprite, name: item.name, info: item.info, index: item.index, chosen: true, loc: location)
                         print("Adding \(movingElement.name) as moving element")
+                        startPoint = location
+                        break
                     }
                 }
                 
                 if withinDistance(pos1: location, pos2: leftItemPosition, distance: 60) && leftElementSprite != nil { //Delete left item
                     print("Clicked element1")
-                    playSound("Snap2.wav") //Change to Pop
+                    playSound("Pop.mp3")
                     leftElementSprite?.removeFromParent()
                     leftElement = ""
                     movingElement = nil //??
                 } else if withinDistance(pos1: location, pos2: rightItemPosition, distance: 60) && rightElementSprite != nil { //Delete right item
-                    playSound("Snap2.wav") //Change to Pop
+                    playSound("Pop.mp3")
                     print("Clicked element2")
                     rightElementSprite?.removeFromParent()
                     rightElement = ""
@@ -354,77 +368,99 @@ class GameScene: SKScene {
         for touch in touches {
             let location = touch.location(in: self)
             
-            // for item in allVisibleItems {
-            if movingItem.contains(location) {
-                movingItem.position = location
+            if movingElement != nil {
+                movingElement.sprite?.position = location
+                
+                if !withinDistance(pos1: location, pos2: startPoint!, distance: 10) {
+                    print("Moved outside item")
+                    notMoved = false
+                } else {
+                    notMoved = true
+                }
+                
             }
-            // }
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if movingElement != nil {
-            if withinDistance(pos1: movingItem.position, pos2: leftItemPosition, distance: 170) { //snaps to left hand
-                playSound("Snap.mp3")
-                playSnapAnimation(pos: CGPoint(x: 0 - 200, y: 200), zPos: 1)
-
-                movingItem.position = CGPoint(x: 0 - 200, y: 200)
-                movingItem.zPosition = 1
-                
-                leftElementSprite?.removeFromParent()
-                leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
-                leftElementSprite.position = leftItemPosition
-                leftElementSprite.zPosition = 1
-                leftElementSprite.size.height = itemSize * 1.6
-                leftElementSprite.size.width = itemSize * 1.6
-                self.addChild(leftElementSprite)
-                leftElement = movingElement.name
-                movingItem.removeFromParent()
-                movingElement.sprite?.removeFromParent()
-                movingElement = nil
-                
-            } else if withinDistance(pos1: movingItem.position, pos2: rightItemPosition, distance: 170) { //snaps to right hand
-                playSound("Snap.mp3")
-                playSnapAnimation(pos: CGPoint(x: 240, y: 150), zPos: 3)
-                movingItem.position = CGPoint(x: 240, y: 150)
-                movingItem.zPosition = 4
-                
-                rightElementSprite?.removeFromParent()
-                rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
-                rightElementSprite.position = rightItemPosition
-                rightElementSprite.zPosition = 4
-                rightElementSprite.size.height = itemSize * 1.6
-                rightElementSprite.size.width = itemSize * 1.6
-                self.addChild(rightElementSprite)
-                rightElement = movingElement.name
-                movingItem.removeFromParent()
-                movingElement.sprite?.removeFromParent()
-                movingElement = nil
-                
-                print("Right element is \(String(describing: rightElementSprite.texture))")
-                print("Right element name is \(rightElement)")
-                
-            } else {
-                //Deleting the moving object
-                movingItem.removeFromParent()
-                movingElement = nil
+        if !animationIsShowing {
+            if movingElement != nil {
+                if withinDistance(pos1: movingElement.sprite!.position, pos2: leftItemPosition, distance: 170) { //snaps to left hand
+                    playSound("Snap.mp3")
+                    playSnapAnimation(pos: CGPoint(x: 0 - 200, y: 200), zPos: 1)
+                    
+                    movingElement.sprite!.position = CGPoint(x: 0 - 200, y: 200)
+                    movingElement.sprite!.zPosition = 1
+                    
+                    leftElementSprite?.removeFromParent()
+                    leftElementSprite = SKSpriteNode(imageNamed: movingElement.name)
+                    leftElementSprite.position = leftItemPosition
+                    leftElementSprite.zPosition = 1
+                    leftElementSprite.size.height = itemSize * 1.6
+                    leftElementSprite.size.width = itemSize * 1.6
+                    self.addChild(leftElementSprite)
+                    leftElement = movingElement.name
+                    removeMovingElement()
+                    
+                } else if withinDistance(pos1: movingElement.sprite!.position, pos2: rightItemPosition, distance: 170) { //snaps to right hand
+                    playSound("Snap.mp3")
+                    playSnapAnimation(pos: CGPoint(x: 240, y: 150), zPos: 3)
+                    movingElement.sprite!.position = CGPoint(x: 240, y: 150)
+                    movingElement.sprite!.zPosition = 4
+                    
+                    rightElementSprite?.removeFromParent()
+                    rightElementSprite = SKSpriteNode(imageNamed: movingElement.name)
+                    rightElementSprite.position = rightItemPosition
+                    rightElementSprite.zPosition = 4
+                    rightElementSprite.size.height = itemSize * 1.6
+                    rightElementSprite.size.width = itemSize * 1.6
+                    self.addChild(rightElementSprite)
+                    rightElement = movingElement.name
+                    removeMovingElement()
+                    
+                    print("Right element is \(String(describing: rightElementSprite.texture))")
+                    print("Right element name is \(rightElement)")
+                    
+                } else if notMoved {
+                    makePopUpView(title: movingElement.name, info: movingElement.info)
+                    removeMovingElement()
+                   // notMoved = true
+                } else {
+                    //Deleting the moving object
+                    //   movingItem.removeFromParent()
+                    /*  movingElement.sprite?.removeFromParent()
+                     movingElement = nil */
+                    removeMovingElement()
+                }
             }
-        }
-        // Checks if both hands are full
-        if leftElement != "" && rightElement != "" {
-            checkForNewElement(leftElement, rightElement)
+            // Checks if both hands are full
+            if leftElement != "" && rightElement != "" { // && !evaluating
+                checkForNewElement(leftElement, rightElement)
+            }
+        } else {
+            removeMovingElement()
         }
     }
     
+    func removeMovingElement() {
+        movingElement.sprite?.removeFromParent()
+        movingElement = nil
+        notMoved = true
+    }
+    
     func checkForNewElement(_ left : String, _ right : String) {
+        evaluating = true
+        print("Evaluating is true")
         print("Checking if to make new item or not")
         var makeNewItem = Cases.Nope
         var index = 0
         var thisDiscovery = ""
+        var information = ""
         for x in allItems {
             if left == x["element1"] && right == x["element2"] || left == x["element2"] && right == x["element1"] {
                 thisDiscovery = x["discovery"]! //Plockar fram vilket item som ska skapas
+                information = x["info"]!
                 makeNewItem = Cases.InventThis //Säger åt programmet att göra ett nytt item
                 if discoveredItems.contains(thisDiscovery) {
                     makeNewItem = Cases.AlreadyInvented //Säger åt programmet att detta redan är uppfunnet
@@ -434,39 +470,15 @@ class GameScene: SKScene {
         if makeNewItem == .InventThis {
             playDiscoveryAnimation()
             playSound("NewDiscovery")
-            playSound("EvilLaugh")
+            let success = "Success\(arc4random_uniform(16)+1).mp3" // Randomizes between the 17 success sound files
+            playSound(success)
             discoveredItems.append(thisDiscovery)
             saveInventoryToUserDefaults(inventoryItems: discoveredItems)
+            coinAmount.text = "\(discoveredItems.count)/\(allItems.count)"
             
             let waitAction = SKAction.wait(forDuration: TimeInterval(2)) //Make all waits to a function which takes a time and a block
             run(waitAction, completion: {
-                
-                self.removeItemsFromHands()
-                self.popUp.position = CGPoint(x: 0, y: 0)
-                self.popUp.yScale = 0.8
-                self.popUp.xScale = 0.8
-                self.popUp.zPosition = 7
-                self.popUpIsShowing = true
-                self.addChild(self.popUp)
-                self.popUpItem = SKSpriteNode(imageNamed: thisDiscovery)
-                self.popUpItem.position = CGPoint(x: 0, y: 0)
-                self.popUpItem.yScale = 0.3
-                self.popUpItem.xScale = 0.3
-                self.popUpItem.zPosition = 8
-                self.addChild(self.popUpItem)
-                self.popUpText.text = "\(thisDiscovery)"
-                self.popUpText.fontColor = SKColor.black
-                self.popUpText.fontSize = 60
-                self.popUpText.horizontalAlignmentMode = .center
-                self.popUpText.position = CGPoint(x: 0, y: self.popUp.size.height / 2 - 250)
-                self.popUpText.zPosition = 8
-                self.addChild(self.popUpText)
-                
-                //Ta reda på alla fontnamn!!!!
-                /*
-                for name in UIFont.familyNames {
-                    print(name)
-                } */
+                self.makePopUpView(title: thisDiscovery, info: information)
 
             })
             
@@ -476,32 +488,86 @@ class GameScene: SKScene {
             
         } else if makeNewItem == .AlreadyInvented {
             print("You've already invented \(thisDiscovery) before")
-            playSound("Error")
-            //Shaking animation
+           /* let error = "Error\(arc4random_uniform(15)).mp3" // Randomizes between the 8 error sound files and silent
+            playSound(error)
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate)) //Make a func for error messages
-            let waitAction = SKAction.wait(forDuration: TimeInterval(1.3))
+            let waitAction = SKAction.wait(forDuration: TimeInterval(1))
             run(waitAction, completion: {
-                self.removeItemsFromHands()
-            })
+                self.removeItemsFromHands() //REMOVE ONLY THE MOST RECENT ONE
+            }) */
+            showError()
         } else if makeNewItem == .Nope {
             print("Nope, these two elements aren't doing anything")
-            //Shaking animation
-            playSound("Error")
+           /* let error = "Error\(arc4random_uniform(15)).mp3" // Randomizes between the 8 error sound files and silent
+            playSound(error)
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            let waitAction = SKAction.wait(forDuration: TimeInterval(1.3))
+            let waitAction = SKAction.wait(forDuration: TimeInterval(1))
             run(waitAction, completion: {
-                self.removeItemsFromHands()
-            })
+                self.removeItemsFromHands() //REMOVE ONLY THE MOST RECENT ONE. Use enums .both, .left or .right
+            })*/
+            showError()
         }
+        
+    }
+    
+    func makePopUpView(title : String, info : String) {
+        self.removeItemsFromHands()
+        self.popUp.position = CGPoint(x: 0, y: 0)
+        self.popUp.yScale = 0.8
+        self.popUp.xScale = 0.8
+        self.popUp.zPosition = 7
+        self.popUpIsShowing = true
+        self.addChild(self.popUp)
+        
+        self.popUpItem = SKSpriteNode(imageNamed: title)
+        self.popUpItem.position = CGPoint(x: 0, y: 0)
+        self.popUpItem.yScale = 0.3
+        self.popUpItem.xScale = 0.3
+        self.popUpItem.zPosition = 8
+        self.addChild(self.popUpItem)
+        
+        self.popUpTitle.text = "\(title)"
+        self.popUpTitle.fontColor = SKColor.black
+        self.popUpTitle.fontSize = 60
+        self.popUpTitle.horizontalAlignmentMode = .center
+        self.popUpTitle.position = CGPoint(x: 0, y: self.popUp.size.height / 2 - 250)
+        self.popUpTitle.zPosition = 8
+        self.addChild(self.popUpTitle)
+        
+        self.popUpInfo.text = "\(info)"
+        self.popUpInfo.fontColor = SKColor.black
+        self.popUpInfo.fontSize = 30
+        self.popUpInfo.horizontalAlignmentMode = .center
+        self.popUpInfo.position = CGPoint(x: 0, y: 0 - self.popUp.size.height / 2 + 200)
+        //ADD MORE LINES HERE AND MAXIMUM ROW WIDTH
+        self.popUpInfo.zPosition = 8
+        self.addChild(self.popUpInfo)
+        
+        self.evaluating = false
+        print("Evaluating is false")
+    }
+    
+    func showError() {
+        let error = "Error\(arc4random_uniform(14)).mp3" // Randomizes between the 8 error sound files and silent
+        playSound(error)
+        if !evaluating { //FIX THIS
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        }
+        let waitAction = SKAction.wait(forDuration: TimeInterval(1))
+        run(waitAction, completion: {
+            self.removeItemsFromHands() //REMOVE ONLY THE MOST RECENT ONE
+        })
         
     }
     
     func removeItemsFromHands() {
         leftElementSprite?.removeFromParent()
         leftElement = ""
-        movingElement = nil //??
+        //movingElement = nil //??
         rightElementSprite?.removeFromParent()
         rightElement = ""
+        evaluating = false
+        print("Evaluating is false")
     }
     
     func playDiscoveryAnimation() {
@@ -518,7 +584,9 @@ class GameScene: SKScene {
             
             let waitAction = SKAction.wait(forDuration: TimeInterval(2))
             discovery.run(waitAction, completion: {
-                discovery.removeFromParent()
+                discovery.removeFromParent() //Don't remove?
+                self.evaluating = false
+                print("Evaluating is false")
             })
         }
         
@@ -540,6 +608,8 @@ class GameScene: SKScene {
     
     func playSnapAnimation(pos: CGPoint, zPos: CGFloat) {
         if let snapAnimation = SKEmitterNode(fileNamed: "SnapAnimation") {
+            evaluating = true
+            print("Evaluating is true")
             addChild(snapAnimation)
             snapAnimation.position = pos
             snapAnimation.advanceSimulationTime(10)
@@ -550,6 +620,8 @@ class GameScene: SKScene {
             let waitAction = SKAction.wait(forDuration: TimeInterval(snapAnimation.particleLifetime))
             snapAnimation.run(waitAction, completion: {
                 snapAnimation.removeFromParent()
+                self.evaluating = false
+                print("Evaluating is false")
             })
         }
     }

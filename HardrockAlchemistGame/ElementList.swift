@@ -8,7 +8,7 @@
 
 import Foundation
 
-let allItems = [["element1": "Earth", "element2": "Water", "discovery": "Mud"],
+let allItems = [["element1": "Earth", "element2": "Water", "discovery": "Mud", "info": "The brown, sticky mess left on the ground after a rainy day witch destroys your new cool shoes"],
                 ["element1": "Mud", "element2": "Fire", "discovery": "Brick"],
                 ["element1": "Brick", "element2": "Brick", "discovery": "Wall"],
                 ["element1": "Wall", "element2": "Wall", "discovery": "Building"],
@@ -37,7 +37,7 @@ let allItems = [["element1": "Earth", "element2": "Water", "discovery": "Mud"],
                 ["element1": "Air", "element2": "Lava", "discovery": "Stone"],
                 ["element1": "Fire", "element2": "Stone", "discovery": "Metal"],
                 ["element1": "Music", "element2": "Metal", "discovery": "Heavy Metal"],
-                ["element1": "Energy", "element2": "Metal", "discovery": "Electricity"],
+                ["element1": "Energy", "element2": "Metal", "discovery": "Electricity", "info": "This is information about electricity"], //Works
                 ["element1": "Stone", "element2": "Pressure", "discovery": "Sand"],
                 ["element1": "Fire", "element2": "Sand", "discovery": "Glass"],
                 ["element1": "Glass", "element2": "Sand", "discovery": "Time"],
