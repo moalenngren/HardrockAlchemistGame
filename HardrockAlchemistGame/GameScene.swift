@@ -45,6 +45,7 @@ class GameScene: SKScene {
     var evaluating = false
     var notMoved = true
     var startPoint : CGPoint?
+    var flavourTextSize : CGFloat!
     
     enum Cases {
         case InventThis, AlreadyInvented, Nope
@@ -63,6 +64,7 @@ class GameScene: SKScene {
         
         if (UIScreen.main.bounds.height / UIScreen.main.bounds.width) < 1.7{
             titleSize = 12
+            flavourTextSize = 30
             print("Running on iPad")
             print("measures: \(UIScreen.main.bounds.height / UIScreen.main.bounds.width)")
             
@@ -96,6 +98,9 @@ class GameScene: SKScene {
             
             itemSize = CGFloat(scroll.size.width / 8.8)
             
+            popUp.yScale = 0.8
+            popUp.xScale = 0.8
+            
         } else if (UIScreen.main.bounds.height / UIScreen.main.bounds.width) > 1.8 {
             print("Running on iPhone X") //Screen bounds 2.16533333333333
             titleSize = 14
@@ -118,6 +123,10 @@ class GameScene: SKScene {
             scroll.zPosition = 3
             
             itemSize = CGFloat(scroll.size.width / 9)
+            flavourTextSize = itemSize / 5
+            
+            popUp.xScale = 0.75
+            popUp.yScale = 0.75
             
         } else {
             print("Running on iPhone 5-8")
@@ -151,6 +160,10 @@ class GameScene: SKScene {
          //   addChild(scroll)
             
             itemSize = CGFloat(scroll.size.width / 8.8)
+            flavourTextSize = itemSize / 5
+            
+            popUp.yScale = 0.8
+            popUp.xScale = 0.8
             
         }
         
@@ -528,8 +541,9 @@ class GameScene: SKScene {
     func makePopUpView(title : String, info : String) {
         self.removeItemsFromHands()
         self.popUp.position = CGPoint(x: 0, y: 0)
-        self.popUp.yScale = 0.8
-        self.popUp.xScale = 0.8
+      //  self.popUp.yScale = 0.8
+      //  self.popUp.xScale = 0.8
+      
         self.popUp.zPosition = 7
         self.popUpIsShowing = true
         self.addChild(self.popUp)
@@ -549,30 +563,27 @@ class GameScene: SKScene {
         self.popUpTitle.zPosition = 8
         self.addChild(self.popUpTitle)
         
-      //  let tv = UITextView(frame: CGRect(x: popUp.position.x, y: popUp.position.y, width: popUpItem.size.width, height: popUp.size.height / 2 - popUpItem.size.height / 2 - 50))
+      //  let tv = UITextView(frame: CGRect(x: 0, y: 0, width: popUp.size.width / 2 - 60, height: popUp.size.height / 9))
+        let tv = UITextView(frame: CGRect(x: 0, y: 0, width: theView.frame.width / 1.5, height: popUp.size.height / 9))
         
-        let tv = UITextView(frame: CGRect(x: theView.frame.width / 2 + popUp.position.x - popUp.size.width / 2,
-                                          y: theView.frame.height / 2 + popUp.position.y - popUp.size.height / 2,
-                                          width: popUp.size.width / 2, height: popUp.size.height / 2))
+       // tv.center = CGPoint(x: theView.frame.width / 2, y: theView.frame.height / 2 + tv.frame.height * 1.6)
+        tv.center = CGPoint(x: theView.frame.width / 2, y: theView.frame.height / 1.3 )
         tv.isEditable = false
-        
         tv.text = "\(info)"
-        tv.font = UIFont(name: "PerryGothic", size: itemSize / 5)
-        theView.addSubview(tv)
         tv.backgroundColor = UIColor.clear
-        tv.backgroundColor = UIColor.white
-        tv.textColor = UIColor.brown
-        
-        print("text is \(tv.text) and info is: \(info)")
+      //  tv.backgroundColor = UIColor.white
+        tv.textColor = UIColor.black
         
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 1.4
-        /*
+        paragraphStyle.lineSpacing = 7
         let attrString = NSMutableAttributedString(string: info)
         attrString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraphStyle, range:NSMakeRange(0, attrString.length))
-        tv.attributedText = attrString */
+        tv.attributedText = attrString
         tv.textAlignment = NSTextAlignment.center
+        tv.font = UIFont(name: "PerryGothic", size: flavourTextSize) //itemSize / 5
+        theView.addSubview(tv)
         
+        /*
         self.popUpInfo.text = "\(info)"
         self.popUpInfo.fontColor = SKColor.black
         self.popUpInfo.horizontalAlignmentMode = .center
@@ -585,10 +596,8 @@ class GameScene: SKScene {
      //   self.popUpInfo.yScale = 2 //
       
         self.popUpInfo.zPosition = 8
-        self.addChild(self.popUpInfo)
+        self.addChild(self.popUpInfo) */
         
-        self.evaluating = false
-        print("Evaluating is false")
     }
     
     func showError() {
