@@ -20,10 +20,8 @@ class GameScene: SKScene {
     var table = SKSpriteNode(imageNamed: "Table")
     var scroll = SKSpriteNode(imageNamed: "Scroll")
     var scrollContainer = SKSpriteNode()
-  //  var itemImage1 = SKSpriteNode(imageNamed: "GlassBall")
     var leftItemPosition : CGPoint!
     var rightItemPosition : CGPoint!
-  //  var itemImage2 = SKSpriteNode(imageNamed: "GlassBall")
     let popUp = SKSpriteNode(imageNamed: "PopUpWindow")
     var popUpItem : SKSpriteNode!
     var popUpIsShowing = false
@@ -31,7 +29,6 @@ class GameScene: SKScene {
     var allVisibleItems : [Element] = []
     var allVisibleItemSprites : [SKSpriteNode] = []
     var allTitles : [SKLabelNode] = []
-   // var movingItem : SKSpriteNode!
     var movingElement : Element!
     var itemSize : CGFloat!
     var leftElement = ""
@@ -54,40 +51,40 @@ class GameScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
-        
         loadInventoryFromDefaults()
-        
         /*
         for name in UIFont.familyNames {
             print(name)
         } */
         
-        if (UIScreen.main.bounds.height / UIScreen.main.bounds.width) <= (alchemistCircle.size.height / alchemistCircle.size.width){
+        alchemistCircle.size = self.frame.size
+        man.size = self.frame.size
+        table.size = self.frame.size
+        
+        if (UIScreen.main.bounds.height / UIScreen.main.bounds.width) < 1.7{
             titleSize = 12
-            //(frame.size.height / frame.size.width)  <= (alchemistCircle.size.height / alchemistCircle.size.width)
-          //  print ("if: nuvarande device är bredare i förhållande till höjd, jämfört med bilden")
-          //  print("Screen bounds \(UIScreen.main.bounds.height / UIScreen.main.bounds.width)")
-          //  print("circle höjd/bredd=\(alchemistCircle.size.height / alchemistCircle.size.width)")
-            print("iPad")
+            print("Running on iPad")
+            print("measures: \(UIScreen.main.bounds.height / UIScreen.main.bounds.width)")
+            
             alchemistCircle.position = CGPoint(x: 0, y: 0)
-            alchemistCircle.zPosition = 0
-            alchemistCircle.size = self.frame.size
+        //    alchemistCircle.zPosition = 0
+        //    alchemistCircle.size = self.frame.size
             alchemistCircle.yScale = 0.75
             alchemistCircle.xScale = 0.75
-            addChild(alchemistCircle)
+        //    addChild(alchemistCircle)
             
             table.position = CGPoint(x: 0, y: 0)
-            table.zPosition = 1
-            table.size = self.frame.size
+           // table.zPosition = 1
+           // table.size = self.frame.size
             table.yScale = 0.75
-            addChild(table)
+         //   addChild(table)
             
             man.position = CGPoint(x: 0, y: 0)
-            man.zPosition = 2
-            man.size = self.frame.size
+         //   man.zPosition = 2
+         //   man.size = self.frame.size
             man.yScale = 0.75
             man.xScale = 0.75
-            addChild(man)
+          //  addChild(man)
             
             scroll.size.height = self.frame.size.height / 2.5
             scroll.size.width = self.frame.size.width
@@ -95,61 +92,87 @@ class GameScene: SKScene {
             scroll.xScale = 0.75
             scroll.position = CGPoint(x: 0, y: (-self.frame.size.height / 2) + (scroll.size.height )-20)
             scroll.zPosition = 3
-            addChild(scroll)
-        } else { // Else if iPhone X, alltså om devicen är lika smal eller smalare än iPhoneX's mått!!
-            print("iPhone")
+          //  addChild(scroll)
+            
+            itemSize = CGFloat(scroll.size.width / 8.8)
+            
+        } else if (UIScreen.main.bounds.height / UIScreen.main.bounds.width) > 1.8 {
+            print("Running on iPhone X") //Screen bounds 2.16533333333333
+            titleSize = 14
+            
+            alchemistCircle.position = CGPoint(x: 0, y: -58)
+            alchemistCircle.yScale = 0.85
+            alchemistCircle.xScale = 0.85
+            
+            table.position = CGPoint(x: 0, y: 0 - 50)
+            
+            man.position = CGPoint(x: 0, y: 0 - 58)
+            man.yScale = 0.85
+            man.xScale = 0.85
+            
+            scroll.size.height = self.frame.size.height / 2.5
+            scroll.size.width = self.frame.size.width
+            scroll.yScale = 0.75
+            scroll.xScale = 0.75
+            scroll.position = CGPoint(x: 0, y: (-self.frame.size.height / 2) + (scroll.size.height ) - 120)
+            scroll.zPosition = 3
+            
+            itemSize = CGFloat(scroll.size.width / 9)
+            
+        } else {
+            print("Running on iPhone 5-8")
             titleSize = 17
             
             alchemistCircle.position = CGPoint(x: 0, y: 0 - 50)
-            alchemistCircle.zPosition = 0
-            alchemistCircle.size = self.frame.size
+         //   alchemistCircle.zPosition = 0
+         //   alchemistCircle.size = self.frame.size
             alchemistCircle.yScale = 0.9
             alchemistCircle.xScale = 0.9
-            addChild(alchemistCircle)
+         //   addChild(alchemistCircle)
             
             table.position = CGPoint(x: 0, y: 0 - 50)
-            table.zPosition = 1
-            table.size = self.frame.size
-            addChild(table)
+         //   table.zPosition = 1
+          //  table.size = self.frame.size
+          //  addChild(table)
             
-            man.position = CGPoint(x: 0, y: 0 - 58)
-            man.zPosition = 2
-            man.size = self.frame.size
+            man.position = CGPoint(x: 0, y: 0 - 58) //58?
+          //  man.zPosition = 2
+          //  man.size = self.frame.size
             man.yScale = 0.9
             man.xScale = 0.9
-            addChild(man)
+          //  addChild(man)
             
             scroll.size.height = self.frame.size.height / 2.5
             scroll.size.width = self.frame.size.width
             scroll.yScale = 0.93
             scroll.xScale = 0.93
-            scroll.position = CGPoint(x: 0, y: (-self.frame.size.height / 2) + (scroll.size.height / 2) + 22)
+            scroll.position = CGPoint(x: 0, y: (-self.frame.size.height / 2) + (scroll.size.height / 2) + 10)
             scroll.zPosition = 3
-            addChild(scroll)
+         //   addChild(scroll)
             
-            print("Size of frame = \(self.frame.size.width)")
-            print("Size of scroll = \(scroll.size.width)")
-            print("Size of screen = \(UIScreen.main.bounds.width)")
+            itemSize = CGFloat(scroll.size.width / 8.8)
+            
         }
-        /*
-        itemImage1.size.height = self.frame.size.height / 8
-        itemImage1.size.width = itemImage1.size.height
-        itemImage1.position = CGPoint(x: 0 - 230, y: 220) // (x: 0 - 200, y: 200)
-        itemImage1.zPosition = 1
-      //  addChild(itemImage1)
-        leftItemPosition = itemImage1.position
         
-        itemImage2.size.height = self.frame.size.height / 8
-        itemImage2.size.width = itemImage1.size.height
-        itemImage2.position = CGPoint(x: 240, y: 210) // (x: 240, y: 150)
-        itemImage2.zPosition = 3
-      //  addChild(itemImage2)
-        rightItemPosition = itemImage2.position */
+      //  alchemistCircle.position = CGPoint(x: 0, y: 0 - 50)
+        alchemistCircle.zPosition = 0
+       // alchemistCircle.size = self.frame.size
+      //  alchemistCircle.yScale = 0.9
+     //   alchemistCircle.xScale = 0.9
+        addChild(alchemistCircle)
         
+        table.zPosition = 1 //
+      //  table.size = self.frame.size //
+        addChild(table) //
+        
+        man.zPosition = 2 //
+      //  man.size = self.frame.size //
+        addChild(man) //
+        
+        addChild(scroll) //
+    
         leftItemPosition = CGPoint(x: 0 - 230, y: 220) // (x: 0 - 200, y: 200)
         rightItemPosition = CGPoint(x: 240, y: 210) // (x: 240, y: 150)
-
-        itemSize = CGFloat(scroll.size.width / 8.8) //IF iPhoneX make this smaller
         
         scrollContainer.size.height = scroll.size.height - 15
         scrollContainer.size.width = scroll.size.width - 15
@@ -173,11 +196,12 @@ class GameScene: SKScene {
         coinSprite.position = CGPoint(x: frame.size.width / 2 - coinSprite.size.width / 2 - 20, y: frame.size.height / 2 - coinSprite.size.height / 2 - 20)
         coinSprite.zPosition = 0
         addChild(coinSprite)
-
+        
+     
+        
         coinAmount.text = "\(discoveredItems.count)/\(allItems.count)"
         coinAmount.fontColor = SKColor.brown
         coinAmount.fontSize = titleSize * 2.2
-      //  coinAmount.horizontalAlignmentMode = .center
         coinAmount.position = CGPoint(x: coinSprite.position.x - coinSprite.size.width - coinSprite.size.width / 2, y: coinSprite.position.y - coinSprite.size.height / 3)
         coinAmount.zPosition = 0
         addChild(coinAmount)
@@ -216,11 +240,20 @@ class GameScene: SKScene {
                 elementSprite.size.width = itemSize
                 elementSprite.size.height = itemSize
                 
-                let nr = index - 20 * page //Evaluate directly in the line below?? // 20 * page
+                let nr = index - 20 * page //Evaluate directly in the line below??
                 setItemPosition(nr : nr, sprite : elementSprite)
                 
+                var flavourText = ""
+                
+                for x in allItems { //Make this better
+                    if x["discovery"]! == item {
+                        flavourText = x["info"]!
+                        print("flavour text is \(flavourText)")
+                    }
+                }
+                
                 //Change SOMEINFORMATION here, get it from the dictionary who has the ["discovery"] = name
-                let element = Element(sprite: elementSprite, name: item, info: "someInformation", index: Int(sorted.index(of: item)!), chosen: false, loc: elementSprite.position)
+                let element = Element(sprite: elementSprite, name: item, info: flavourText, index: Int(sorted.index(of: item)!), chosen: false, loc: elementSprite.position)
                 elementSprite.zPosition = 5
                 addChild(elementSprite)
                 allVisibleItemSprites.append(elementSprite)
@@ -235,15 +268,12 @@ class GameScene: SKScene {
                 title.zPosition = 4
                 addChild(title)
                 allTitles.append(title)
-              //  print("Adding \(item) to inventory")
             }
         }
         setArrows(page: page)
     }
     
     func setItemPosition(nr : Int, sprite : SKSpriteNode) {
-        
-       // print("Setting position")
         
         // Y Pos
         if (0...4).contains(nr) {
@@ -262,7 +292,7 @@ class GameScene: SKScene {
         } else if nr == 1 || nr == 6 || nr == 11 || nr == 16  {
             sprite.position.x = scrollContainer.position.x - (scrollContainer.size.width / 12) * 2
         } else if nr == 2 || nr == 7 || nr == 12 || nr == 17 {
-            sprite.position.x = scrollContainer.position.x // - (scrollContainer.size.width / 12) * 0
+            sprite.position.x = scrollContainer.position.x
         } else if nr == 3 || nr == 8 || nr == 13 || nr == 18 {
             sprite.position.x = scrollContainer.position.x + (scrollContainer.size.width / 12) * 2
         } else if nr == 4 || nr == 9 || nr == 14 || nr == 19 {
@@ -300,7 +330,6 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //Try to separate long press and short press!!!! Short = present info square
         for touch in touches {
             let location = touch.location(in: self)
             //Check several fingers????!!?
@@ -320,7 +349,6 @@ class GameScene: SKScene {
                     if withinDistance(pos1: item.loc, pos2: location, distance: 60) {
                         
                         if movingElement != nil {
-                          //  movingItem.removeFromParent()
                             movingElement.sprite?.removeFromParent()
                         }
                         
@@ -425,12 +453,7 @@ class GameScene: SKScene {
                 } else if notMoved {
                     makePopUpView(title: movingElement.name, info: movingElement.info)
                     removeMovingElement()
-                   // notMoved = true
                 } else {
-                    //Deleting the moving object
-                    //   movingItem.removeFromParent()
-                    /*  movingElement.sprite?.removeFromParent()
-                     movingElement = nil */
                     removeMovingElement()
                 }
             }
@@ -459,11 +482,15 @@ class GameScene: SKScene {
         var information = ""
         for x in allItems {
             if left == x["element1"] && right == x["element2"] || left == x["element2"] && right == x["element1"] {
-                thisDiscovery = x["discovery"]! //Plockar fram vilket item som ska skapas
-                information = x["info"]!
-                makeNewItem = Cases.InventThis //Säger åt programmet att göra ett nytt item
+                thisDiscovery = x["discovery"]!
+                if let info = x["info"] {
+                    information = info
+                } else {
+                    information = ""
+                }
+                makeNewItem = Cases.InventThis
                 if discoveredItems.contains(thisDiscovery) {
-                    makeNewItem = Cases.AlreadyInvented //Säger åt programmet att detta redan är uppfunnet
+                    makeNewItem = Cases.AlreadyInvented
                 }
             }
         }
@@ -488,27 +515,15 @@ class GameScene: SKScene {
             
         } else if makeNewItem == .AlreadyInvented {
             print("You've already invented \(thisDiscovery) before")
-           /* let error = "Error\(arc4random_uniform(15)).mp3" // Randomizes between the 8 error sound files and silent
-            playSound(error)
-            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate)) //Make a func for error messages
-            let waitAction = SKAction.wait(forDuration: TimeInterval(1))
-            run(waitAction, completion: {
-                self.removeItemsFromHands() //REMOVE ONLY THE MOST RECENT ONE
-            }) */
             showError()
         } else if makeNewItem == .Nope {
             print("Nope, these two elements aren't doing anything")
-           /* let error = "Error\(arc4random_uniform(15)).mp3" // Randomizes between the 8 error sound files and silent
-            playSound(error)
-            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            let waitAction = SKAction.wait(forDuration: TimeInterval(1))
-            run(waitAction, completion: {
-                self.removeItemsFromHands() //REMOVE ONLY THE MOST RECENT ONE. Use enums .both, .left or .right
-            })*/
             showError()
         }
         
     }
+    
+    var theView : UIView! //THIS
     
     func makePopUpView(title : String, info : String) {
         self.removeItemsFromHands()
@@ -534,12 +549,41 @@ class GameScene: SKScene {
         self.popUpTitle.zPosition = 8
         self.addChild(self.popUpTitle)
         
+      //  let tv = UITextView(frame: CGRect(x: popUp.position.x, y: popUp.position.y, width: popUpItem.size.width, height: popUp.size.height / 2 - popUpItem.size.height / 2 - 50))
+        
+        let tv = UITextView(frame: CGRect(x: theView.frame.width / 2 + popUp.position.x - popUp.size.width / 2,
+                                          y: theView.frame.height / 2 + popUp.position.y - popUp.size.height / 2,
+                                          width: popUp.size.width / 2, height: popUp.size.height / 2))
+        tv.isEditable = false
+        
+        tv.text = "\(info)"
+        tv.font = UIFont(name: "PerryGothic", size: itemSize / 5)
+        theView.addSubview(tv)
+        tv.backgroundColor = UIColor.clear
+        tv.backgroundColor = UIColor.white
+        tv.textColor = UIColor.brown
+        
+        print("text is \(tv.text) and info is: \(info)")
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 1.4
+        /*
+        let attrString = NSMutableAttributedString(string: info)
+        attrString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraphStyle, range:NSMakeRange(0, attrString.length))
+        tv.attributedText = attrString */
+        tv.textAlignment = NSTextAlignment.center
+        
         self.popUpInfo.text = "\(info)"
         self.popUpInfo.fontColor = SKColor.black
-        self.popUpInfo.fontSize = 30
         self.popUpInfo.horizontalAlignmentMode = .center
-        self.popUpInfo.position = CGPoint(x: 0, y: 0 - self.popUp.size.height / 2 + 200)
-        //ADD MORE LINES HERE AND MAXIMUM ROW WIDTH
+        self.popUpInfo.position = CGPoint(x: 0, y: 0 - self.popUp.size.height / 2 + 150)
+        //How to make every line centered?????
+        self.popUpInfo.numberOfLines = 5
+        self.popUpInfo.preferredMaxLayoutWidth = scroll.size.width - 200
+        self.popUpInfo.fontSize = 30 // 12
+     //   self.popUpInfo.xScale = 2 //
+     //   self.popUpInfo.yScale = 2 //
+      
         self.popUpInfo.zPosition = 8
         self.addChild(self.popUpInfo)
         
@@ -548,11 +592,11 @@ class GameScene: SKScene {
     }
     
     func showError() {
-        let error = "Error\(arc4random_uniform(14)).mp3" // Randomizes between the 8 error sound files and silent
+        let error = "Error\(arc4random_uniform(14)).mp3"
         playSound(error)
         if !evaluating { //FIX THIS
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        }
+        } //Take this condition away
         let waitAction = SKAction.wait(forDuration: TimeInterval(1))
         run(waitAction, completion: {
             self.removeItemsFromHands() //REMOVE ONLY THE MOST RECENT ONE
@@ -608,7 +652,6 @@ class GameScene: SKScene {
     
     func playSnapAnimation(pos: CGPoint, zPos: CGFloat) {
         if let snapAnimation = SKEmitterNode(fileNamed: "SnapAnimation") {
-            evaluating = true
             print("Evaluating is true")
             addChild(snapAnimation)
             snapAnimation.position = pos
@@ -620,8 +663,6 @@ class GameScene: SKScene {
             let waitAction = SKAction.wait(forDuration: TimeInterval(snapAnimation.particleLifetime))
             snapAnimation.run(waitAction, completion: {
                 snapAnimation.removeFromParent()
-                self.evaluating = false
-                print("Evaluating is false")
             })
         }
     }
