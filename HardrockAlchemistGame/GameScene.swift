@@ -46,6 +46,8 @@ class GameScene: SKScene {
     var notMoved = true
     var startPoint : CGPoint?
     var flavourTextSize : CGFloat!
+    var tv = UITextView()
+    let textViewRecognizer = UITapGestureRecognizer()
     
     enum Cases {
         case InventThis, AlreadyInvented, Nope
@@ -111,7 +113,7 @@ class GameScene: SKScene {
             
             table.position = CGPoint(x: 0, y: 0 - 50)
             
-            man.position = CGPoint(x: 0, y: 0 - 58)
+            man.position = CGPoint(x: 0, y: 0 - 60)
             man.yScale = 0.85
             man.xScale = 0.85
             
@@ -342,20 +344,35 @@ class GameScene: SKScene {
         }
     }
     
+    func deletePopUp() {
+        popUpItem.removeFromParent()
+        popUp.removeFromParent()
+        popUpIsShowing = false
+        popUpTitle.removeFromParent()
+        popUpInfo.removeFromParent()
+        tv.isHidden = true
+        
+        
+        reloadPage(currentPage)
+        print("reloads inventory")
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
             //Check several fingers????!!?
             
             if popUpIsShowing {
-                popUpItem.removeFromParent()
+                
+                deletePopUp()
+             /*   popUpItem.removeFromParent()
                 popUp.removeFromParent()
                 popUpIsShowing = false
                 popUpTitle.removeFromParent()
                 popUpInfo.removeFromParent()
                 
                 reloadPage(currentPage)
-                print("reloads inventory")
+                print("reloads inventory") */
                 
             } else if !animationIsShowing {
                 for item in allVisibleItems {
@@ -563,10 +580,8 @@ class GameScene: SKScene {
         self.popUpTitle.zPosition = 8
         self.addChild(self.popUpTitle)
         
-      //  let tv = UITextView(frame: CGRect(x: 0, y: 0, width: popUp.size.width / 2 - 60, height: popUp.size.height / 9))
-        let tv = UITextView(frame: CGRect(x: 0, y: 0, width: theView.frame.width / 1.5, height: popUp.size.height / 9))
+       /* let */ tv = UITextView(frame: CGRect(x: 0, y: 0, width: theView.frame.width / 1.5, height: popUp.size.height / 9))
         
-       // tv.center = CGPoint(x: theView.frame.width / 2, y: theView.frame.height / 2 + tv.frame.height * 1.6)
         tv.center = CGPoint(x: theView.frame.width / 2, y: theView.frame.height / 1.3 )
         tv.isEditable = false
         tv.text = "\(info)"
@@ -583,6 +598,9 @@ class GameScene: SKScene {
         tv.font = UIFont(name: "PerryGothic", size: flavourTextSize) //itemSize / 5
         theView.addSubview(tv)
         
+        textViewRecognizer.addTarget(self, action: #selector(tappedTextView(_:)))
+        tv.addGestureRecognizer(textViewRecognizer)
+        
         /*
         self.popUpInfo.text = "\(info)"
         self.popUpInfo.fontColor = SKColor.black
@@ -598,6 +616,13 @@ class GameScene: SKScene {
         self.popUpInfo.zPosition = 8
         self.addChild(self.popUpInfo) */
         
+    }
+    
+    @objc func tappedTextView(_ sender: UITapGestureRecognizer) {
+        if !tv.isHidden {
+            print("Tapped flavour text!")
+            deletePopUp()
+        }
     }
     
     func showError() {
