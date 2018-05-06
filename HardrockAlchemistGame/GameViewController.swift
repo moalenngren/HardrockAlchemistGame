@@ -22,7 +22,7 @@ class GameViewController: UIViewController {
                 scene.scaleMode = .aspectFill
               //  scene.scaleMode = .resizeFill
                 
-                (scene as! GameScene).theView = view //THIS
+                (scene as! GameScene).theView = view 
                 
                 // Present the scene
                 view.presentScene(scene)
