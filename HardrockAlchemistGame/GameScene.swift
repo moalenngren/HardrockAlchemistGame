@@ -42,7 +42,7 @@ class GameScene: SKScene {
     var currentPage = 0
     var coinAmount = SKLabelNode(fontNamed: "BlackCastleMF")
     var coinSprite = SKSpriteNode(imageNamed: "Coin")
-    var evaluating = false
+  //  var evaluating = false
     var moved = false
     var startPoint : CGPoint?
     var flavourTextSize : CGFloat!
@@ -315,12 +315,12 @@ class GameScene: SKScene {
                     }
                 }
                 
-                if withinDistance(pos1: location, pos2: leftItemPosition, distance: 60) && leftElementSprite != nil { //Delete left item
+                if withinDistance(pos1: location, pos2: leftItemPosition, distance: 60) && leftElement != "" { //Delete left item
                     playSound("Pop.mp3")
                     leftElementSprite?.removeFromParent()
                     leftElement = ""
                     movingElement = nil
-                } else if withinDistance(pos1: location, pos2: rightItemPosition, distance: 60) && rightElementSprite != nil { //Delete right item
+                } else if withinDistance(pos1: location, pos2: rightItemPosition, distance: 60) && rightElement != "" { //Delete right item
                     playSound("Pop.mp3")
                     rightElementSprite?.removeFromParent()
                     rightElement = ""
@@ -403,7 +403,7 @@ class GameScene: SKScene {
                 }
             }
 
-            if leftElement != "" && rightElement != "" { // && !evaluating
+            if leftElement != "" && rightElement != "" {
                 checkForNewElement(leftElement, rightElement)
             }
         } else {
@@ -520,7 +520,7 @@ class GameScene: SKScene {
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         let waitAction = SKAction.wait(forDuration: TimeInterval(1))
         run(waitAction, completion: {
-            self.removeItemsFromHands() //REMOVE ONLY THE MOST RECENT ONE
+            self.removeItemsFromHands()
         })
     }
     
@@ -548,8 +548,6 @@ class GameScene: SKScene {
             let waitAction = SKAction.wait(forDuration: TimeInterval(2))
             discovery.run(waitAction, completion: {
                 discovery.removeFromParent()
-                self.evaluating = false
-                print("Evaluating is false")
             })
         }
         
@@ -570,7 +568,6 @@ class GameScene: SKScene {
     
     func playSnapAnimation(pos: CGPoint, zPos: CGFloat) {
         if let snapAnimation = SKEmitterNode(fileNamed: "SnapAnimation") {
-            print("Evaluating is true")
             addChild(snapAnimation)
             snapAnimation.position = pos
             snapAnimation.advanceSimulationTime(10)
